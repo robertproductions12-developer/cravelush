@@ -4,456 +4,436 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crave Lush | Sabor que Seduce</title>
+    
+    <!-- Librerías -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
     <style>
         :root {
             --purple: #6f2c91;
             --yellow: #ffb800;
-            --dark-purple: #4a1a63;
             --white: #ffffff;
-            --shadow: 0 8px 25px rgba(0,0,0,0.1);
+            --shadow: 0 10px 30px rgba(0,0,0,0.15);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Quicksand', sans-serif; }
 
-        body { 
-            background: #f8f0fc; 
-            color: #333; 
-            overflow-x: hidden;
+        body { background: #fdfbff; color: #333; overflow-x: hidden; }
+
+        /* --- ANIMACIONES PROFESIONALES --- */
+        @keyframes pulse-yellow {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 184, 0, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 184, 0, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 184, 0, 0); }
         }
 
-        /* --- ANIMACIONES --- */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
+        /* --- VIDEO BACKGROUND --- */
+        .video-container {
+            position: relative;
+            height: 60vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
+
+        .video-bg {
+            position: absolute;
+            top: 50%; left: 50%;
+            min-width: 100%; min-height: 100%;
+            width: auto; height: auto;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            filter: brightness(0.5);
+        }
+
+        .hero-content { color: white; z-index: 1; animation: slideUp 1s ease; }
+
+        /* --- BOTONES ANIMADOS --- */
+        .btn-nav, .btn-add, .btn-action {
+            background: var(--yellow);
+            color: var(--purple);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-nav:hover, .btn-add:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(111, 44, 145, 0.3);
+            background: white;
+        }
+
+        .btn-add { background: var(--purple); color: white; width: 100%; justify-content: center; }
 
         /* --- NAVEGACIÓN --- */
         nav {
             background: var(--purple);
             padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 15px rgba(111, 44, 145, 0.3);
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000;
         }
-
-        .logo-container img { height: 50px; }
-        .nav-links { display: flex; gap: 15px; }
-
-        .btn-nav {
-            background: var(--yellow);
-            color: var(--purple);
-            border: none;
-            padding: 10px 15px;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-nav:hover { transform: scale(1.1); background: white; }
 
         /* --- SECCIONES --- */
         .section { display: none; padding: 40px 5%; max-width: 1200px; margin: auto; min-height: 80vh; }
-        .section.active { display: block; animation: fadeInScale 0.4s ease; }
+        .section.active { display: block; animation: slideUp 0.5s ease; }
 
-        /* --- HERO & CONTACTO --- */
-        .contact-info {
-            background: var(--white);
-            padding: 30px;
-            border-radius: 30px;
-            margin-top: 30px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            box-shadow: var(--shadow);
+        /* --- UBICACIÓN --- */
+        .map-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center;
+        }
+        .map-content { background: white; padding: 20px; border-radius: 20px; width: 90%; max-width: 800px; }
+
+        /* --- TABLA DE VENTAS ADMIN --- */
+        .sales-report {
+            background: white; padding: 30px; border-radius: 20px; margin-top: 30px; box-shadow: var(--shadow);
+        }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        .total-box { font-size: 1.5rem; font-weight: bold; color: var(--purple); text-align: right; padding: 20px; }
+
+        /* --- FOOTER --- */
+        footer {
+            background: #222; color: white; text-align: center; padding: 40px; margin-top: 50px;
+        }
+        .dev-tag { color: var(--yellow); font-weight: bold; letter-spacing: 2px; }
+
+        /* --- MODAL CARRITO --- */
+        #cart-modal {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; padding: 30px; border-radius: 30px; z-index: 6000;
+            width: 90%; max-width: 400px; display: none; box-shadow: 0 0 100px rgba(0,0,0,0.5);
         }
 
-        .map-container iframe {
-            width: 100%;
-            height: 250px;
-            border-radius: 20px;
-            border: 4px solid var(--yellow);
-        }
-
-        /* --- PRODUCTOS --- */
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        .product-card {
-            background: white;
-            border-radius: 25px;
-            overflow: hidden;
-            position: relative;
-            transition: 0.3s;
-            border: 2px solid transparent;
-            box-shadow: var(--shadow);
-        }
-
-        .product-card:hover { border-color: var(--purple); transform: translateY(-10px); }
-
-        .product-img { width: 100%; height: 230px; object-fit: cover; }
-        
-        .product-content { padding: 20px; text-align: center; }
-        .price { color: var(--purple); font-size: 1.5rem; font-weight: 800; margin: 10px 0; }
-
-        .btn-add {
-            background: var(--purple);
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 12px;
-            border-radius: 15px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* --- LOGIN & ADMIN --- */
-        .login-box {
-            max-width: 400px;
-            margin: 100px auto;
-            background: white;
-            padding: 40px;
-            border-radius: 30px;
-            text-align: center;
-            box-shadow: var(--shadow);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: 2px solid #eee;
-            border-radius: 15px;
-            outline: none;
-        }
-
-        /* --- ÉXITO: FULL SCREEN IMAGE --- */
+        /* overlay gracias */
         #thanks-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--purple);
-            z-index: 5000;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--purple); z-index: 7000; display: none;
+            flex-direction: column; justify-content: center; align-items: center; color: white;
         }
+        #thanks-image { max-width: 80%; border-radius: 20px; }
 
-        #thanks-image {
-            max-width: 90%;
-            max-height: 70vh;
-            border-radius: 20px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
-        }
-
-        /* --- BOTÓN FLOTANTE CARRITO --- */
+        /* Float button cart */
         #cart-float {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--yellow);
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            z-index: 900;
-            animation: float 3s infinite ease-in-out;
-        }
-
-        /* --- DISEÑO COCINA --- */
-        .order-card {
-            background: white;
-            margin-bottom: 15px;
-            padding: 20px;
-            border-radius: 20px;
-            border-left: 10px solid var(--yellow);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            .nav-links span { display: none; }
-            .btn-nav { padding: 12px; }
+            position: fixed; bottom: 30px; right: 30px;
+            background: var(--yellow); width: 70px; height: 70px;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 1.5rem; cursor: pointer; z-index: 900;
+            animation: pulse-yellow 2s infinite;
         }
     </style>
 </head>
 <body>
 
-    <!-- OVERLAY GRACIAS -->
-    <div id="thanks-overlay">
-        <img id="thanks-image" src="" alt="Gracias">
-        <h2>¡GRACIAS POR TU COMPRA!</h2>
-        <button class="btn-nav" onclick="closeThanks()" style="margin-top:20px">VOLVER</button>
-    </div>
+    <!-- VIDEO HERO -->
+    <header id="view-home-video" class="video-container">
+        <video autoplay muted loop class="video-bg">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-hamburguer-close-up-vibe-4015-large.mp4" type="video/mp4">
+        </video>
+        <div class="hero-content">
+            <h1 style="font-size: 4rem;">CRAVE LUSH</h1>
+            <p style="font-size: 1.5rem;">Sabor que Seduce, Placer que Perdura.</p>
+            <br>
+            <button class="btn-nav" onclick="toggleMap()"><i class="fas fa-map-marker-alt"></i> UBICACIÓN</button>
+        </div>
+    </header>
 
     <nav>
-        <div class="logo-container">
-            <h2 style="color:var(--yellow)">CRAVE <span style="color:white">LUSH</span></h2>
-        </div>
+        <h2 style="color:var(--yellow)">CRAVE <span style="color:white">LUSH</span></h2>
         <div class="nav-links">
-            <button class="btn-nav" onclick="switchView('view-home')"><i class="fas fa-home"></i> <span>Inicio</span></button>
-            <button class="btn-nav" onclick="switchView('view-menu')"><i class="fas fa-hamburger"></i> <span>Menú</span></button>
-            <button class="btn-nav" onclick="checkAccess('kitchen')"><i class="fas fa-fire"></i> <span>Cocina</span></button>
-            <button class="btn-nav" onclick="checkAccess('admin')"><i class="fas fa-user-shield"></i> <span>Admin</span></button>
+            <button class="btn-nav" onclick="switchView('view-menu')"><i class="fas fa-utensils"></i> MENU</button>
+            <button class="btn-nav" onclick="checkAccess('kitchen')"><i class="fas fa-fire"></i> COCINA</button>
+            <button class="btn-nav" onclick="checkAccess('admin')"><i class="fas fa-user-shield"></i> ADMIN</button>
         </div>
     </nav>
 
-    <div id="cart-float" onclick="openCart()">
-        <i class="fas fa-shopping-basket"></i>
-        <span id="cart-count" style="position:absolute; top:-5px; right:-5px; background:var(--purple); color:white; border-radius:50%; width:25px; height:25px; font-size:0.8rem; display:flex; justify-content:center; align-items:center;">0</span>
-    </div>
-
-    <!-- SECCIÓN INICIO / CONTACTO -->
-    <section id="view-home" class="section active">
-        <div style="text-align:center; padding: 40px 0;">
-            <h1 style="font-size: 3rem; color: var(--purple);">Sabor que Seduce, <br><span style="color:var(--yellow)">Placer que Perdura.</span></h1>
-            <a href="https://instagram.com/crave_lush" target="_blank" style="display:inline-block; margin-top:20px; color:var(--purple); text-decoration:none; font-weight:bold; font-size:1.2rem;">
-                <i class="fab fa-instagram"></i> @crave_lush
-            </a>
-        </div>
-
-        <div class="contact-info">
-            <div>
-                <h3>¡Contáctanos!</h3>
-                <p><i class="fas fa-phone"></i> +58 412-1234567</p>
-                <p><i class="fas fa-map-marker-alt"></i> Av. Principal, Edificio Crave, Nivel 1</p>
-                <br>
-                <button class="btn-add" onclick="window.location.href='https://wa.me/584121234567'">Escribir al WhatsApp</button>
-            </div>
-            <div class="map-container">
-                <!-- Reemplaza este iframe con tu ubicación real de Google Maps -->
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3923.23456789!2d-66.1234567!3d10.1234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDA3JzM0LjQiTiA2NsKwMDcnMjQuNCJX!5e0!3m2!1ses!2sve!4v1625000000000!5m2!1ses!2sve" allowfullscreen="" loading="lazy"></iframe>
-            </div>
-        </div>
-    </section>
-
     <!-- SECCIÓN MENÚ -->
     <section id="view-menu" class="section">
-        <h2 style="text-align:center; color:var(--purple)">Nuestras Delicias</h2>
-        <div id="menu-display" class="menu-grid"></div>
-    </section>
-
-    <!-- SECCIÓN LOGIN -->
-    <section id="view-login" class="section">
-        <div class="login-box">
-            <h2 id="login-title">Acceso Restringido</h2>
-            <input type="password" id="login-pass" class="form-input" placeholder="Introduce la clave">
-            <button class="btn-add" onclick="validateLogin()">ENTRAR</button>
-        </div>
+        <h2 style="text-align:center; color:var(--purple); margin-bottom: 30px;">Nuestro Menú Exclusivo</h2>
+        <div id="menu-display" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:30px;"></div>
     </section>
 
     <!-- SECCIÓN ADMIN -->
     <section id="view-admin" class="section">
-        <h2 style="color:var(--purple)">Panel de Administración</h2>
-        <div class="contact-info">
-            <div>
+        <h2 style="color:var(--purple)">Panel de Control Pro</h2>
+        
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
+            <div class="sales-report">
                 <h4>Cargar Producto</h4>
-                <input type="text" id="adm-name" class="form-input" placeholder="Nombre">
-                <input type="number" id="adm-price" class="form-input" placeholder="Precio ($)">
-                <input type="file" id="adm-file" accept="image/*" class="form-input">
-                <button class="btn-add" onclick="saveProduct()">GUARDAR PRODUCTO</button>
+                <input type="text" id="adm-name" placeholder="Nombre del plato" style="width:100%; padding:10px; margin:10px 0;">
+                <input type="number" id="adm-price" placeholder="Precio ($)" style="width:100%; padding:10px; margin:10px 0;">
+                <input type="file" id="adm-file" style="margin:10px 0;">
+                <button class="btn-add" onclick="saveProduct()">GUARDAR</button>
             </div>
-            <div>
-                <h4>Configuración de Ventas</h4>
-                <p>Imagen de "Gracias" (Aparece tras comprar):</p>
-                <input type="file" id="adm-thanks-file" accept="image/*" class="form-input" onchange="uploadThanksImg()">
-                <br><br>
-                <label><input type="checkbox" id="allow-sales" checked> Permitir ventas al público</label>
+            
+            <div class="sales-report">
+                <h4>Ajustes</h4>
+                <p>Imagen de Éxito:</p>
+                <input type="file" id="adm-thanks-file" onchange="uploadThanksImg()" style="margin:10px 0;">
+                <button class="btn-add" style="background:red;" onclick="resetSales()">REINICIAR VENTAS DEL DÍA</button>
             </div>
         </div>
-        <div id="admin-list" style="margin-top:30px"></div>
+
+        <div class="sales-report">
+            <h3>REGISTRO DE VENTAS DIARIAS</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Pedido</th>
+                        <th>Monto</th>
+                        <th>Hora</th>
+                    </tr>
+                </thead>
+                <tbody id="sales-table-body"></tbody>
+            </table>
+            <div class="total-box">TOTAL VENDIDO: $<span id="daily-total">0.00</span></div>
+            <button class="btn-nav" onclick="window.print()"><i class="fas fa-print"></i> IMPRIMIR REPORTE</button>
+        </div>
     </section>
 
     <!-- SECCIÓN COCINA -->
     <section id="view-kitchen" class="section">
-        <h2 style="text-align:center; color:var(--purple); margin-bottom:20px">PEDIDOS POR PREPARAR</h2>
-        <div id="kitchen-display"></div>
+        <h2 style="text-align:center; color:var(--purple)">PEDIDOS ENTRANTES</h2>
+        <div id="kitchen-display" style="margin-top:20px;"></div>
     </section>
 
-    <script>
-        // --- CONFIGURACIÓN Y PERSISTENCIA ---
-        const KEYS = { admin: "1234", kitchen: "5555" };
-        let currentRole = "";
-        let products = JSON.parse(localStorage.getItem('cl_products')) || [];
-        let orders = JSON.parse(localStorage.getItem('cl_orders')) || [];
-        let cart = [];
-        let thanksImg = localStorage.getItem('cl_thanks_img') || "https://via.placeholder.com/800x600?text=Gracias+por+tu+Compra";
+    <!-- SECCIÓN LOGIN -->
+    <section id="view-login" class="section">
+        <div style="max-width:400px; margin:auto; background:white; padding:40px; border-radius:20px; text-align:center; box-shadow:var(--shadow);">
+            <h3 id="login-title">Acceso</h3>
+            <input type="password" id="login-pass" placeholder="Clave" style="width:100%; padding:15px; margin:20px 0; border-radius:10px; border:1px solid #ddd;">
+            <button class="btn-add" onclick="validateLogin()">ENTRAR</button>
+        </div>
+    </section>
 
-        // --- NAVEGACIÓN Y ACCESO ---
+    <!-- MODALES Y OVERLAYS -->
+    <div id="map-modal" class="map-modal">
+        <div class="map-content">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                <h3>Nuestra Ubicación</h3>
+                <button onclick="toggleMap()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3923.23!2d-66.123!3d10.123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDA3JzM0LjQiTiA2NsKwMDcnMjQuNCJX!5e0!3m2!1ses!2sve!4v1625000000000" width="100%" height="400" style="border:0; border-radius:15px;" allowfullscreen=""></iframe>
+        </div>
+    </div>
+
+    <div id="cart-modal">
+        <h3>Finalizar Pedido</h3>
+        <input type="text" id="cust-name" placeholder="Tu Nombre Completo" style="width:100%; padding:15px; margin:20px 0; border-radius:10px; border:1px solid #ddd;">
+        <div id="cart-items-list"></div>
+        <p style="font-weight:bold; margin-top:10px;">Total: $<span id="cart-total-modal">0.00</span></p>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button onclick="closeCart()" style="flex:1; padding:10px; border:none; border-radius:10px;">CERRAR</button>
+            <button onclick="confirmPurchase()" class="btn-nav" style="flex:2;">PEDIR AHORA</button>
+        </div>
+    </div>
+
+    <div id="thanks-overlay">
+        <img id="thanks-image" src="https://via.placeholder.com/800x600?text=Gracias+por+Preferir+Crave+Lush" alt="Gracias">
+        <h2 style="margin-top:20px;">¡PEDIDO RECIBIDO!</h2>
+        <p>Estamos preparando tu sabor favorito...</p>
+        <button class="btn-nav" onclick="location.reload()" style="margin-top:20px;">VOLVER AL INICIO</button>
+    </div>
+
+    <div id="cart-float" onclick="openCart()">
+        <i class="fas fa-shopping-bag"></i>
+        <span id="cart-count" style="position:absolute; top:0; right:0; background:var(--purple); color:white; border-radius:50%; width:25px; height:25px; font-size:0.8rem; display:flex; justify-content:center; align-items:center;">0</span>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 CRAVE LUSH - Todos los derechos reservados</p>
+        <p>Potenciado por: <span class="dev-tag">DEVELOPER ROBERT- PARACO</span></p>
+    </footer>
+
+    <script>
+        // --- CONFIGURACIÓN FIREBASE (REEMPLAZA CON TUS DATOS) ---
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY",
+            authDomain: "TU_PROYECTO.firebaseapp.com",
+            databaseURL: "https://TU_PROYECTO-default-rtdb.firebaseio.com",
+            projectId: "TU_PROYECTO",
+            storageBucket: "TU_PROYECTO.appspot.com",
+            messagingSenderId: "ID",
+            appId: "APP_ID"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // --- ESTADO LOCAL ---
+        let currentRole = "";
+        let cart = [];
+        let thanksImg = localStorage.getItem('cl_thanks_img');
+
+        // --- NAVEGACIÓN ---
         function switchView(id) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            if(id === 'view-menu' || id === 'view-home') renderMenu();
-            if(id === 'view-admin') renderAdmin();
-            if(id === 'view-kitchen') renderKitchen();
+            if(id === 'view-home-video') document.getElementById('view-home-video').style.display = 'flex';
+            else document.getElementById('view-home-video').style.display = 'none';
         }
 
         function checkAccess(role) {
             currentRole = role;
-            document.getElementById('login-title').innerText = "Acceso " + (role === 'admin' ? 'Administrador' : 'Cocina');
-            document.getElementById('login-pass').value = "";
+            document.getElementById('login-title').innerText = "Acceso a " + role.toUpperCase();
             switchView('view-login');
         }
 
         function validateLogin() {
             const pass = document.getElementById('login-pass').value;
-            if(pass === KEYS[currentRole]) {
-                switchView('view-' + currentRole);
-            } else {
-                alert("Clave incorrecta");
-            }
+            const keys = { admin: "1234", kitchen: "5555" };
+            if(pass === keys[currentRole]) switchView('view-' + currentRole);
+            else alert("Clave Incorrecta");
         }
 
-        // --- LÓGICA DE PRODUCTOS ---
+        function toggleMap() {
+            const modal = document.getElementById('map-modal');
+            modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        // --- PRODUCTOS ---
         function saveProduct() {
             const name = document.getElementById('adm-name').value;
             const price = document.getElementById('adm-price').value;
             const file = document.getElementById('adm-file').files[0];
-
-            if(!name || !price || !file) return alert("Completa todos los campos");
+            if(!name || !price || !file) return alert("Faltan datos");
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                products.push({ id: Date.now(), name, price: parseFloat(price), img: e.target.result });
-                localStorage.setItem('cl_products', JSON.stringify(products));
-                renderAdmin();
-                alert("¡Producto añadido!");
-            }
+                db.ref('products').push({ name, price: parseFloat(price), img: e.target.result });
+                alert("Producto Guardado");
+            };
             reader.readAsDataURL(file);
+        }
+
+        // --- CARRITO ---
+        function addToCart(name, price) {
+            cart.push({name, price});
+            document.getElementById('cart-count').innerText = cart.length;
+        }
+
+        function openCart() {
+            if(cart.length === 0) return alert("Carrito vacío");
+            document.getElementById('cart-modal').style.display = 'block';
+            let total = cart.reduce((s, i) => s + i.price, 0);
+            document.getElementById('cart-total-modal').innerText = total.toFixed(2);
+        }
+
+        function closeCart() { document.getElementById('cart-modal').style.display = 'none'; }
+
+        function confirmPurchase() {
+            const name = document.getElementById('cust-name').value;
+            if(!name) return alert("Escribe tu nombre");
+            
+            const total = cart.reduce((s, i) => s + i.price, 0);
+            const items = cart.map(i => i.name).join(", ");
+            const time = new Date().toLocaleTimeString();
+
+            const order = { customer: name, items, total, time, status: 'pending' };
+            
+            // Guardar en Firebase (Ventas y Cocina)
+            db.ref('orders').push(order);
+            db.ref('sales_history').push(order);
+
+            document.getElementById('thanks-overlay').style.display = 'flex';
+            if(thanksImg) document.getElementById('thanks-image').src = thanksImg;
+        }
+
+        // --- ESCUCHADORES DE FIREBASE (TIEMPO REAL) ---
+        db.ref('products').on('value', snap => {
+            const data = snap.val();
+            const container = document.getElementById('menu-display');
+            container.innerHTML = "";
+            for(let id in data) {
+                container.innerHTML += `
+                    <div style="background:white; border-radius:20px; overflow:hidden; box-shadow:var(--shadow);">
+                        <img src="${data[id].img}" style="width:100%; height:200px; object-fit:cover;">
+                        <div style="padding:20px; text-align:center;">
+                            <h3>${data[id].name}</h3>
+                            <p style="color:var(--purple); font-weight:bold; font-size:1.2rem;">$${data[id].price}</p>
+                            <button class="btn-add" onclick="addToCart('${data[id].name}', ${data[id].price})">AGREGAR</button>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+
+        db.ref('orders').on('value', snap => {
+            const data = snap.val();
+            const container = document.getElementById('kitchen-display');
+            container.innerHTML = "";
+            for(let id in data) {
+                container.innerHTML += `
+                    <div style="background:white; padding:20px; border-radius:15px; margin-bottom:10px; border-left:8px solid var(--yellow); display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h4>${data[id].customer}</h4>
+                            <p>${data[id].items}</p>
+                        </div>
+                        <button class="btn-nav" onclick="db.ref('orders/${id}').remove()">LISTO ✅</button>
+                    </div>
+                `;
+            }
+        });
+
+        db.ref('sales_history').on('value', snap => {
+            const data = snap.val();
+            const table = document.getElementById('sales-table-body');
+            let totalDay = 0;
+            table.innerHTML = "";
+            for(let id in data) {
+                totalDay += parseFloat(data[id].total);
+                table.innerHTML += `
+                    <tr>
+                        <td>${data[id].customer}</td>
+                        <td>${data[id].items}</td>
+                        <td>$${data[id].total}</td>
+                        <td>${data[id].time}</td>
+                    </tr>
+                `;
+            }
+            document.getElementById('daily-total').innerText = totalDay.toFixed(2);
+        });
+
+        function resetSales() {
+            if(confirm("¿Estás seguro de borrar todas las ventas de hoy?")) {
+                db.ref('sales_history').remove();
+            }
         }
 
         function uploadThanksImg() {
             const file = document.getElementById('adm-thanks-file').files[0];
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = (e) => {
                 thanksImg = e.target.result;
                 localStorage.setItem('cl_thanks_img', thanksImg);
-                alert("Imagen de agradecimiento actualizada");
-            }
+                alert("Imagen de éxito actualizada");
+            };
             reader.readAsDataURL(file);
         }
 
-        // --- CARRITO Y COMPRA ---
-        function addToCart(id) {
-            if(!document.getElementById('allow-sales').checked) return alert("Lo sentimos, las ventas están cerradas por ahora.");
-            const p = products.find(x => x.id === id);
-            cart.push(p);
-            document.getElementById('cart-count').innerText = cart.length;
-        }
-
-        function openCart() {
-            if(cart.length === 0) return alert("Tu carrito está vacío");
-            const total = cart.reduce((acc, p) => acc + p.price, 0);
-            const confirmar = confirm(`Total: $${total.toFixed(2)}\n¿Confirmar pedido?`);
-            
-            if(confirmar) {
-                const order = {
-                    id: Math.floor(Math.random() * 900) + 100,
-                    items: cart.map(i => i.name).join(", "),
-                    total: total.toFixed(2),
-                    status: 'pendiente'
-                };
-                orders.push(order);
-                localStorage.setItem('cl_orders', JSON.stringify(orders));
-                
-                // Mostrar imagen de éxito
-                showThanks();
-                cart = [];
-                document.getElementById('cart-count').innerText = "0";
-            }
-        }
-
-        function showThanks() {
-            document.getElementById('thanks-image').src = thanksImg;
-            document.getElementById('thanks-overlay').style.display = 'flex';
-        }
-
-        function closeThanks() {
-            document.getElementById('thanks-overlay').style.display = 'none';
-            switchView('view-home');
-        }
-
-        // --- RENDERIZADO ---
-        function renderMenu() {
-            const container = document.getElementById('menu-display');
-            container.innerHTML = products.map(p => `
-                <div class="product-card">
-                    <img src="${p.img}" class="product-img">
-                    <div class="product-content">
-                        <h3>${p.name}</h3>
-                        <p class="price">$${p.price.toFixed(2)}</p>
-                        <button class="btn-add" onclick="addToCart(${p.id})">AGREGAR</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderAdmin() {
-            const container = document.getElementById('admin-list');
-            container.innerHTML = "<h4>Productos Actuales</h4>" + products.map(p => `
-                <div style="background:white; padding:10px; border-radius:10px; margin-bottom:5px; display:flex; justify-content:space-between;">
-                    <span>${p.name} - $${p.price}</span>
-                    <button onclick="deleteProd(${p.id})" style="color:red; border:none; background:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
-                </div>
-            `).join('');
-        }
-
-        function deleteProd(id) {
-            products = products.filter(p => p.id !== id);
-            localStorage.setItem('cl_products', JSON.stringify(products));
-            renderAdmin();
-        }
-
-        function renderKitchen() {
-            const container = document.getElementById('kitchen-display');
-            if(orders.length === 0) container.innerHTML = "<p style='text-align:center'>No hay pedidos pendientes.</p>";
-            container.innerHTML = orders.map((o, idx) => `
-                <div class="order-card">
-                    <div>
-                        <span style="font-weight:900; color:var(--purple)">#${o.id}</span>
-                        <p><strong>${o.items}</strong></p>
-                    </div>
-                    <button class="btn-nav" onclick="completeOrder(${idx})">LISTO ✅</button>
-                </div>
-            `).reverse().join('');
-        }
-
-        function completeOrder(idx) {
-            orders.splice(idx, 1);
-            localStorage.setItem('cl_orders', JSON.stringify(orders));
-            renderKitchen();
-        }
-
-        // Inicializar
-        renderMenu();
+        switchView('view-home-video');
     </script>
 </body>
 </html>
