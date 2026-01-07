@@ -23,6 +23,7 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Quicksand', sans-serif; }
 
+        /* --- FONDO ANIMADO --- */
         body { 
             background: linear-gradient(-45deg, #6f2c91, #ffb800, #4a1a63, #e6a600);
             background-size: 400% 400%;
@@ -30,6 +31,7 @@
             color: #333; 
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
         }
 
         @keyframes gradientBG {
@@ -38,137 +40,100 @@
             100% { background-position: 0% 50%; }
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(40px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        /* --- ELEMENTOS 3D FLOTANTES --- */
+        .bg-icons {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1; overflow: hidden;
+        }
+        .floating-cone {
+            position: absolute; color: rgba(255,255,255,0.2);
+            font-size: 3rem; animation: float 10s infinite linear;
+        }
+        @keyframes float {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
 
+        /* --- HEADER --- */
         header.main-nav {
-            position: fixed;
-            top: 0; width: 100%;
+            position: fixed; top: 0; width: 100%;
             background: rgba(111, 44, 145, 0.85);
             backdrop-filter: blur(10px);
             padding: 12px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 2000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 2000; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
 
-        /* LOGO */
         .logo-container { display: flex; align-items: center; gap: 10px; }
         #app-logo { height: 50px; width: auto; border-radius: 8px; object-fit: contain; }
-        .logo h2 { color: var(--yellow); font-size: 1.2rem; letter-spacing: 1px; }
-
-        .nav-links { display: flex; gap: 10px; }
+        .logo h2 { color: var(--yellow); font-size: 1.2rem; }
 
         .btn-nav {
-            background: var(--yellow);
-            color: var(--purple);
-            border: none;
-            padding: 10px 18px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: var(--transition);
+            background: var(--yellow); color: var(--purple);
+            border: none; padding: 10px 18px; border-radius: 50px;
+            font-weight: 700; cursor: pointer; transition: var(--transition);
             display: flex; align-items: center; gap: 8px;
         }
         .btn-nav:hover { transform: translateY(-3px); background: white; box-shadow: var(--shadow); }
 
-        main { margin-top: 80px; width: 100%; }
-
-        .section { 
-            display: none; 
-            padding: 30px 5%; 
-            max-width: 1200px; 
-            margin: auto; 
-            animation: slideUp 0.6s ease forwards;
-        }
+        /* --- SECCIONES --- */
+        .section { display: none; padding: 30px 5%; max-width: 1200px; margin: 100px auto 0; animation: slideUp 0.6s ease; }
         .section.active { display: block; }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .hero-video {
-            position: relative;
-            height: 50vh;
-            border-radius: 30px;
-            overflow: hidden;
-            margin-bottom: 30px;
-            box-shadow: var(--shadow);
-        }
-        .hero-video video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6); }
-        .hero-text {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center; color: white; width: 90%;
-        }
+        .admin-box { background: rgba(255,255,255,0.95); padding: 25px; border-radius: 20px; margin-bottom: 20px; box-shadow: var(--shadow); }
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 2px solid #eee; border-radius: 12px; outline: none; }
 
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            padding-bottom: 100px;
+        /* --- BOTONES DE CONTORNO (PROFESIONALES) --- */
+        .contour-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin: 15px 0; }
+        .btn-contour {
+            padding: 10px; border: 2px solid var(--purple); border-radius: 15px;
+            background: transparent; color: var(--purple); font-weight: bold;
+            cursor: pointer; transition: 0.3s; text-align: center;
         }
-        .card {
-            background: rgba(255,255,255,0.95);
-            border-radius: 25px;
-            overflow: hidden;
-            transition: var(--transition);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        .card img { width: 100%; height: 220px; object-fit: cover; }
-        .card-body { padding: 20px; text-align: center; }
+        .btn-contour.active { background: var(--purple); color: white; transform: scale(1.05); }
 
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 5000;
-            display: none; align-items: center; justify-content: center;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        .modal-content {
-            background: white; padding: 30px; border-radius: 30px;
-            width: 100%; max-width: 500px; position: relative;
-        }
-
-        .admin-box {
-            background: rgba(255,255,255,0.9);
-            padding: 25px; border-radius: 20px; margin-bottom: 20px;
-        }
-        input, select, textarea {
-            width: 100%; padding: 12px; margin: 8px 0;
-            border: 2px solid #eee; border-radius: 12px; outline: none; font-size: 1rem;
-        }
-
-        /* INVENTARIO */
-        .stock-low { color: #ff0000; font-weight: bold; animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0.5; } }
-        .inv-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .inv-table th, .inv-table td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; }
+        /* --- TABLAS --- */
+        .inv-table { width: 100%; border-collapse: collapse; }
+        .inv-table th, .inv-table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        .stock-low { color: #ff0000; font-weight: bold; background: rgba(255,0,0,0.1); border-radius: 5px; }
 
         #cart-btn {
             position: fixed; bottom: 25px; right: 25px;
             background: var(--yellow); color: var(--purple);
             width: 65px; height: 65px; border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
-            font-size: 1.5rem; cursor: pointer; z-index: 1500;
-            box-shadow: var(--shadow);
+            font-size: 1.5rem; cursor: pointer; z-index: 1500; box-shadow: var(--shadow);
         }
 
-        footer { background: rgba(0,0,0,0.8); color: white; text-align: center; padding: 30px; margin-top: 50px; }
-        .dev { color: var(--yellow); font-weight: bold; }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        .card { background: white; border-radius: 25px; overflow: hidden; transition: var(--transition); }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 5000;
+            display: none; align-items: center; justify-content: center;
+        }
+        .modal-content { background: white; padding: 30px; border-radius: 30px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+
+        footer { background: rgba(0,0,0,0.8); color: white; text-align: center; padding: 20px; }
     </style>
 </head>
 <body>
 
+    <!-- Iconos de fondo -->
+    <div class="bg-icons" id="bg-icons"></div>
+
     <header class="main-nav">
         <div class="logo-container">
-            <img id="app-logo" src="" alt="">
+            <img id="app-logo" src="https://cdn-icons-png.flaticon.com/512/938/938063.png" alt="Logo">
             <div class="logo"><h2>CRAVE <span>LUSH</span></h2></div>
         </div>
         <div class="nav-links">
-            <button class="btn-nav" onclick="switchView('view-menu')"><i class="fas fa-utensils"></i> <span>MENÚ</span></button>
+            <button class="btn-nav" onclick="switchView('view-menu')"><i class="fas fa-ice-cream"></i> <span>MENÚ</span></button>
             <button class="btn-nav" onclick="checkAccess('kitchen')"><i class="fas fa-fire"></i> <span>COCINA</span></button>
             <button class="btn-nav" onclick="checkAccess('admin')"><i class="fas fa-user-shield"></i> <span>ADMIN</span></button>
         </div>
@@ -177,83 +142,55 @@
     <main>
         <!-- SECCIÓN MENÚ -->
         <section id="view-menu" class="section active">
-            <div class="hero-video">
-                <video autoplay muted loop playsinline>
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-hamburguer-close-up-vibe-4015-large.mp4" type="video/mp4">
-                </video>
-                <div class="hero-text">
-                    <h1>Sabor que Seduce</h1>
-                    <p>¡Pide ahora y vive la experiencia Lush!</p>
-                    <button class="btn-nav" id="btn-location" style="margin: 15px auto;"><i class="fas fa-map-marker-alt"></i> VER UBICACIÓN</button>
-                </div>
-            </div>
             <div id="menu-container" class="menu-grid"></div>
         </section>
 
         <!-- SECCIÓN COCINA -->
         <section id="view-kitchen" class="section">
-            <h2 style="text-align:center; color:white; margin-bottom:20px;">PEDIDOS EN COLA 🔥</h2>
+            <h2 style="text-align:center; color:white; margin-bottom:20px;">ORDENES 🔥</h2>
             <div id="kitchen-orders"></div>
+            
+            <div class="admin-box">
+                <h4>📦 SALIDA DE MATERIALES</h4>
+                <div id="kitchen-inventory-list"></div>
+            </div>
         </section>
 
         <!-- SECCIÓN ADMIN -->
         <section id="view-admin" class="section">
-            <h2 style="text-align:center; color:white; margin-bottom:20px;">PANEL DE CONTROL</h2>
-            
-            <!-- Logo y Link -->
             <div class="admin-box">
-                <h4>⚙️ Configuración General</h4>
-                <label>Logo del Header:</label>
-                <input type="file" id="admin-logo-upload" accept="image/*" onchange="uploadLogo(this)">
-                <label>Link de Google Maps:</label>
-                <input type="text" id="admin-map-link" placeholder="Pega el link de Google Maps">
+                <h4>⚙️ Configuración & Gastos</h4>
+                <button class="btn-nav" onclick="exportExpenses()" style="width:100%; justify-content:center; margin-bottom:10px; background: #28a745; color:white;">
+                    <i class="fas fa-file-excel"></i> DESCARGAR REPORTE DE GASTOS (EXCEL)
+                </button>
+                <input type="file" id="admin-logo-upload" onchange="uploadLogo(this)">
+                <input type="text" id="admin-map-link" placeholder="Link Google Maps">
                 <button class="btn-nav" onclick="saveSettings()">Guardar Configuración</button>
             </div>
 
-            <!-- Inventario -->
             <div class="admin-box">
-                <h4>📦 Inventario de Materiales</h4>
+                <h4>📦 CONTROL DE INVENTARIO (ADMIN)</h4>
                 <div style="display: flex; gap: 5px;">
-                    <input type="text" id="inv-name" placeholder="Material (Ej: Pan)">
-                    <input type="text" id="inv-unit" placeholder="Unidad (Ej: Unid, Kg)">
+                    <input type="text" id="inv-name" placeholder="Material">
                     <input type="number" id="inv-qty" placeholder="Cant.">
+                    <input type="number" id="inv-cost" placeholder="Costo total ($)">
                 </div>
-                <button class="btn-nav" style="width:100%; justify-content:center;" onclick="addInventory()">AÑADIR MATERIAL</button>
-                <div style="overflow-x: auto;">
-                    <table class="inv-table" id="inventory-table">
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Cant.</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
+                <button class="btn-nav" style="width:100%; justify-content:center;" onclick="addInventory()">AÑADIR MATERIAL / GASTO</button>
+                <div style="overflow-x: auto; margin-top:15px;">
+                    <table class="inv-table" id="admin-inventory-table">
+                        <thead><tr><th>Material</th><th>Cant.</th><th>Costo</th><th>Acciones</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Cargar Producto -->
             <div class="admin-box">
-                <h4>🍔 Cargar Producto al Menú</h4>
-                <input type="text" id="prod-name" placeholder="Nombre del Producto">
+                <h4>🍔 Cargar Producto</h4>
+                <input type="text" id="prod-name" placeholder="Nombre">
                 <input type="number" id="prod-price" placeholder="Precio ($)">
-                <input type="text" id="prod-contours" placeholder="Contornos (Eje: Queso, Tocino, Jamón)">
-                <input type="file" id="prod-img" accept="image/*">
-                <button class="btn-nav" style="width:100%; justify-content:center; background: var(--purple); color:white;" onclick="uploadProduct()">GUARDAR PRODUCTO</button>
-            </div>
-
-            <!-- Datos de Pago -->
-            <div class="admin-box">
-                <h4>💳 Configuración de Pagos</h4>
-                <textarea id="admin-pay-data" placeholder="Escribe aquí los datos de Pago Móvil, Transferencia, etc."></textarea>
-                <button class="btn-nav" onclick="savePaymentInfo()">GUARDAR DATOS DE PAGO</button>
-            </div>
-
-            <div class="admin-box">
-                <h3>Ventas: $<span id="total-sales">0.00</span></h3>
-                <button class="btn-nav" onclick="resetDay()" style="background:red; color:white;">REINICIAR DÍA</button>
-                <div id="sales-history" style="max-height: 200px; overflow-y:auto; margin-top:10px;"></div>
+                <input type="text" id="prod-contours" placeholder="Contornos (ej: Fresa, Chocolate, Coco)">
+                <input type="file" id="prod-img">
+                <button class="btn-nav" onclick="uploadProduct()">GUARDAR PRODUCTO</button>
             </div>
         </section>
 
@@ -267,46 +204,37 @@
         </section>
     </main>
 
-    <!-- MODAL PRODUCTO (OPCIONES) -->
+    <!-- MODAL PRODUCTO -->
     <div id="product-modal" class="modal-overlay" onclick="closeModals(event)">
         <div class="modal-content">
-            <h3 id="modal-prod-name"></h3>
-            <p>Selecciona tu contorno:</p>
-            <select id="modal-prod-contour"></select>
-            <button class="btn-nav" style="width:100%; justify-content:center; margin-top:15px;" onclick="confirmAddToCart()">AÑADIR AL PEDIDO</button>
+            <h3 id="modal-prod-name" style="color:var(--purple); font-size:1.8rem;"></h3>
+            <p style="margin:10px 0; font-weight:bold;">Selecciona tu contorno favorito:</p>
+            <div id="contour-container" class="contour-grid"></div>
+            <button class="btn-nav" style="width:100%; justify-content:center; margin-top:20px; font-size:1.1rem;" onclick="confirmAddToCart()">AÑADIR AL CARRITO 🍦</button>
         </div>
     </div>
 
     <!-- MODAL CARRITO -->
     <div id="cart-modal" class="modal-overlay" onclick="closeModals(event)">
         <div class="modal-content">
-            <h3>Tu Pedido</h3>
-            <div id="cart-list" style="margin: 15px 0;"></div>
+            <h3>🛒 Tu Pedido</h3>
+            <div id="cart-list"></div>
             <hr>
-            <h4 style="margin: 10px 0;">Total: $<span id="cart-total">0.00</span></h4>
-            
-            <label>Método de Pago:</label>
-            <select id="client-pay-method" onchange="showPayDetails()">
-                <option value="Efectivo">💵 Efectivo</option>
-                <option value="Pago Móvil">📱 Pago Móvil</option>
-                <option value="Transferencia">🏦 Transferencia</option>
+            <h4>Total: $<span id="cart-total">0.00</span></h4>
+            <select id="client-pay-method">
+                <option value="Efectivo">Efectivo</option>
+                <option value="Pago Móvil">Pago Móvil</option>
+                <option value="Transferencia">Transferencia</option>
             </select>
-            <div id="pay-instructions" style="font-size: 0.8rem; background: #f9f9f9; padding: 10px; border-radius: 10px; display:none; margin-bottom: 10px;"></div>
-
             <input type="text" id="client-name" placeholder="Tu nombre">
-            <button class="btn-nav" style="width:100%; justify-content:center;" onclick="sendOrder()">ENVIAR A COCINA</button>
+            <button class="btn-nav" style="width:100%; justify-content:center;" onclick="sendOrder()">CONFIRMAR PEDIDO</button>
         </div>
     </div>
 
     <div id="cart-btn" onclick="openCart()">
         <i class="fas fa-shopping-basket"></i>
-        <span id="cart-count" style="position:absolute; top:0; right:0; background:red; color:white; border-radius:50%; width:22px; height:22px; font-size:0.7rem; display:flex; align-items:center; justify-content:center;">0</span>
+        <span id="cart-count" style="position:absolute; top:0; right:0; background:red; color:white; border-radius:50%; width:20px; height:20px; font-size:0.7rem; display:flex; align-items:center; justify-content:center;">0</span>
     </div>
-
-    <footer>
-        <p>© 2026 CRAVE LUSH - Sabor que Seduce</p>
-        <p>Desarrollado por: <span class="dev">DEVELOPER ROBERT- PARACO</span></p>
-    </footer>
 
     <script>
         // CONFIGURACIÓN FIREBASE
@@ -321,10 +249,24 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let currentRole = "";
         let cart = [];
         let selectedProduct = null;
-        let paymentDataGlobal = "";
+        let selectedContour = "Ninguno";
+
+        // GENERAR HELADOS FLOTANTES
+        function createFloatingIcons() {
+            const container = document.getElementById('bg-icons');
+            const icons = ['fa-ice-cream', 'fa-cookie', 'fa-snowflakes'];
+            for(let i=0; i<15; i++) {
+                const el = document.createElement('i');
+                el.className = `fas ${icons[Math.floor(Math.random()*icons.length)]} floating-cone`;
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.animationDelay = Math.random() * 10 + 's';
+                el.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+                container.appendChild(el);
+            }
+        }
+        createFloatingIcons();
 
         // NAVEGACIÓN
         function switchView(id) {
@@ -334,78 +276,78 @@
         }
 
         function checkAccess(role) {
-            currentRole = role;
-            document.getElementById('login-label').innerText = "ACCESO " + role.toUpperCase();
-            switchView('view-login');
-        }
-
-        function login() {
-            const pass = document.getElementById('pass-input').value;
+            const pass = prompt("Ingrese clave para " + role);
             const keys = { admin: "1234", kitchen: "5555" };
-            if(pass === keys[currentRole]) switchView('view-' + currentRole);
-            else alert("Clave Incorrecta");
+            if(pass === keys[role]) switchView('view-' + role);
+            else if(pass !== null) alert("Clave incorrecta");
         }
 
-        // CARGAR SETTINGS (LOGO Y MAPA)
-        db.ref('settings').on('value', snap => {
-            const s = snap.val();
-            if(s) {
-                if(s.logo) document.getElementById('app-logo').src = s.logo;
-                if(s.map) document.getElementById('btn-location').onclick = () => window.open(s.map, '_blank');
-                if(s.payment) paymentDataGlobal = s.payment;
-            }
-        });
-
-        function uploadLogo(input) {
-            const file = input.files[0];
-            const reader = new FileReader();
-            reader.onload = (e) => db.ref('settings/logo').set(e.target.result);
-            reader.readAsDataURL(file);
-        }
-
-        function saveSettings() {
-            const map = document.getElementById('admin-map-link').value;
-            if(map) db.ref('settings/map').set(map);
-            alert("Ajustes guardados");
-        }
-
-        function savePaymentInfo() {
-            const pay = document.getElementById('admin-pay-data').value;
-            db.ref('settings/payment').set(pay);
-            alert("Datos de pago actualizados");
-        }
-
-        // INVENTARIO
+        // INVENTARIO Y GASTOS
         function addInventory() {
             const name = document.getElementById('inv-name').value;
-            const unit = document.getElementById('inv-unit').value;
             const qty = parseFloat(document.getElementById('inv-qty').value);
-            if(!name || !qty) return;
-            db.ref('inventory').push({ name, unit, qty });
+            const cost = parseFloat(document.getElementById('inv-cost').value) || 0;
+            if(!name || isNaN(qty)) return;
+
+            db.ref('inventory').push({ name, qty, cost, date: new Date().toLocaleDateString() });
             document.getElementById('inv-name').value = "";
+            document.getElementById('inv-qty').value = "";
+            document.getElementById('inv-cost').value = "";
         }
 
         db.ref('inventory').on('value', snap => {
-            const tbody = document.querySelector('#inventory-table tbody');
-            tbody.innerHTML = "";
+            const adminTbody = document.querySelector('#admin-inventory-table tbody');
+            const kitchenDiv = document.getElementById('kitchen-inventory-list');
+            adminTbody.innerHTML = "";
+            kitchenDiv.innerHTML = "";
+
             snap.forEach(child => {
                 const item = child.val();
                 const isLow = item.qty < 5;
-                tbody.innerHTML += `
+                const statusClass = isLow ? 'stock-low' : '';
+
+                // Vista Admin
+                adminTbody.innerHTML += `
                     <tr>
-                        <td class="${isLow ? 'stock-low' : ''}">${item.name} (${item.unit})</td>
-                        <td class="${isLow ? 'stock-low' : ''}">${item.qty}</td>
+                        <td class="${statusClass}">${item.name}</td>
+                        <td class="${statusClass}">${item.qty}</td>
+                        <td>$${item.cost}</td>
                         <td>
                             <button onclick="updateStock('${child.key}', 1)">+</button>
                             <button onclick="updateStock('${child.key}', -1)">-</button>
                         </td>
                     </tr>
                 `;
+
+                // Vista Cocina (Solo Salida)
+                kitchenDiv.innerHTML += `
+                    <div class="admin-box" style="display:flex; justify-content:space-between; align-items:center; padding:10px;">
+                        <span class="${statusClass}">${item.name} (Quedan: ${item.qty})</span>
+                        <button class="btn-nav" style="padding:5px 15px; background:var(--purple); color:white;" onclick="updateStock('${child.key}', -1)">REBAJAR SALIDA -1</button>
+                    </div>
+                `;
             });
         });
 
         function updateStock(key, amt) {
-            db.ref(`inventory/${key}/qty`).transaction(current => (current || 0) + amt);
+            db.ref(`inventory/${key}/qty`).transaction(c => (c || 0) + amt);
+        }
+
+        // REPORTE EXCEL (CSV)
+        function exportExpenses() {
+            db.ref('inventory').once('value', snap => {
+                let csv = "Fecha,Material,Cantidad,Costo Total\n";
+                snap.forEach(child => {
+                    const i = child.val();
+                    csv += `${i.date},${i.name},${i.qty},${i.cost}\n`;
+                });
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.setAttribute('href', url);
+                a.setAttribute('download', `Gastos_CraveLush_${new Date().toLocaleDateString()}.csv`);
+                a.click();
+            });
         }
 
         // PRODUCTOS
@@ -414,12 +356,12 @@
             const price = parseFloat(document.getElementById('prod-price').value);
             const contours = document.getElementById('prod-contours').value;
             const file = document.getElementById('prod-img').files[0];
-            if(!name || !price || !file) return alert("Faltan datos");
+            if(!name || !file) return;
 
             const reader = new FileReader();
             reader.onload = (e) => {
                 db.ref('products').push({ name, price, contours, img: e.target.result });
-                alert("Producto cargado");
+                alert("Producto Guardado");
             };
             reader.readAsDataURL(file);
         }
@@ -432,13 +374,11 @@
                 container.innerHTML += `
                     <div class="card">
                         <img src="${p.img}">
-                        <div class="card-body">
+                        <div style="padding:15px; text-align:center;">
                             <h3>${p.name}</h3>
-                            <p style="color:var(--purple); font-weight:bold;">$${p.price.toFixed(2)}</p>
+                            <p style="color:var(--purple); font-weight:bold; font-size:1.2rem;">$${p.price.toFixed(2)}</p>
                             <button class="btn-nav" style="width:100%; justify-content:center; margin-top:10px;" 
-                                onclick="openProductDetail('${p.name}', ${p.price}, '${p.contours || ''}')">
-                                PEDIR
-                            </button>
+                                onclick="openProductDetail('${p.name}', ${p.price}, '${p.contours}')">PEDIR</button>
                         </div>
                     </div>
                 `;
@@ -447,86 +387,78 @@
 
         function openProductDetail(name, price, contours) {
             selectedProduct = { name, price };
+            selectedContour = "Ninguno";
             document.getElementById('modal-prod-name').innerText = name;
-            const sel = document.getElementById('modal-prod-contour');
-            sel.innerHTML = '<option value="Ninguno">Sin contorno especial</option>';
+            const container = document.getElementById('contour-container');
+            container.innerHTML = `<button class="btn-contour active" onclick="selectContour(this, 'Ninguno')">Básico</button>`;
+            
             if(contours) {
                 contours.split(',').forEach(c => {
-                    sel.innerHTML += `<option value="${c.trim()}">${c.trim()}</option>`;
+                    const label = c.trim();
+                    container.innerHTML += `<button class="btn-contour" onclick="selectContour(this, '${label}')">${label}</button>`;
                 });
             }
             document.getElementById('product-modal').style.display = 'flex';
         }
 
-        function confirmAddToCart() {
-            const contour = document.getElementById('modal-prod-contour').value;
-            cart.push({ ...selectedProduct, contour });
-            document.getElementById('cart-count').innerText = cart.length;
-            document.getElementById('product-modal').style.display = 'none';
+        function selectContour(btn, val) {
+            document.querySelectorAll('.btn-contour').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedContour = val;
         }
 
-        // CARRITO
+        function confirmAddToCart() {
+            cart.push({ ...selectedProduct, contour: selectedContour });
+            document.getElementById('cart-count').innerText = cart.length;
+            document.getElementById('product-modal').style.display = 'none';
+            // Efecto de fluidez al añadir
+            const btn = document.getElementById('cart-btn');
+            btn.style.transform = 'scale(1.3)';
+            setTimeout(() => btn.style.transform = 'scale(1)', 200);
+        }
+
+        // CARRITO & ORDENES
         function openCart() {
             if(cart.length === 0) return alert("Carrito vacío");
             const list = document.getElementById('cart-list');
             let total = 0;
             list.innerHTML = "";
-            cart.forEach((item, index) => {
+            cart.forEach(item => {
                 total += item.price;
-                list.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:5px;">
-                        <span>${item.name} (${item.contour})</span>
-                        <span>$${item.price.toFixed(2)}</span>
-                    </div>
-                `;
+                list.innerHTML += `<div style="display:flex; justify-content:space-between; margin:5px 0;">
+                    <span>${item.name} (${item.contour})</span> <span>$${item.price.toFixed(2)}</span>
+                </div>`;
             });
             document.getElementById('cart-total').innerText = total.toFixed(2);
             document.getElementById('cart-modal').style.display = 'flex';
         }
 
-        function showPayDetails() {
-            const method = document.getElementById('client-pay-method').value;
-            const infoBox = document.getElementById('pay-instructions');
-            if(method !== "Efectivo") {
-                infoBox.style.display = "block";
-                infoBox.innerText = paymentDataGlobal || "Contactar al administrador para datos de pago.";
-            } else {
-                infoBox.style.display = "none";
-            }
-        }
-
         function sendOrder() {
             const name = document.getElementById('client-name').value;
-            const method = document.getElementById('client-pay-method').value;
             if(!name) return alert("Escribe tu nombre");
-
             const order = {
                 client: name,
-                method: method,
-                items: cart.map(i => `${i.name} [Contorno: ${i.contour}]`).join(", "),
+                items: cart.map(i => `${i.name} [${i.contour}]`).join(", "),
                 total: document.getElementById('cart-total').innerText,
+                method: document.getElementById('client-pay-method').value,
                 time: new Date().toLocaleTimeString()
             };
-
             db.ref('orders').push(order);
-            db.ref('sales_history').push(order);
-            alert("¡Pedido enviado! En breve procesaremos tu comida.");
+            alert("¡Pedido enviado con éxito!");
             cart = [];
             document.getElementById('cart-count').innerText = "0";
-            location.reload();
+            document.getElementById('cart-modal').style.display = 'none';
         }
 
-        // COCINA Y VENTAS
         db.ref('orders').on('value', snap => {
             const container = document.getElementById('kitchen-orders');
             container.innerHTML = "";
             snap.forEach(child => {
                 const o = child.val();
                 container.innerHTML += `
-                    <div class="admin-box" style="border-left: 8px solid var(--yellow);">
+                    <div class="admin-box" style="border-left: 10px solid var(--yellow);">
                         <div style="display:flex; justify-content:space-between;">
-                            <strong>${o.client}</strong>
-                            <span style="background:var(--purple); color:white; padding:2px 8px; border-radius:5px; font-size:0.7rem;">${o.method}</span>
+                            <strong>${o.client}</strong> <span>${o.method}</span>
                         </div>
                         <p style="margin:10px 0;">${o.items}</p>
                         <button class="btn-nav" style="width:100%; justify-content:center;" onclick="db.ref('orders/${child.key}').remove()">DESPACHAR ✅</button>
@@ -534,20 +466,6 @@
                 `;
             });
         });
-
-        db.ref('sales_history').on('value', snap => {
-            const list = document.getElementById('sales-history');
-            let total = 0;
-            list.innerHTML = "";
-            snap.forEach(child => {
-                const s = child.val();
-                total += parseFloat(s.total);
-                list.innerHTML += `<p style="font-size:0.8rem;">${s.time} - ${s.client}: $${s.total}</p>`;
-            });
-            document.getElementById('total-sales').innerText = total.toFixed(2);
-        });
-
-        function resetDay() { if(confirm("¿Borrar historial de ventas?")) db.ref('sales_history').remove(); }
 
         function closeModals(e) {
             if(e.target.classList.contains('modal-overlay')) {
