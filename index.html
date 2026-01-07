@@ -78,32 +78,55 @@
         .section.active { display: block; }
         @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
+        /* --- GRID DE PRODUCTOS OPTIMIZADO PARA MÓVILES --- */
+        .menu-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 25px; 
+            justify-items: center; /* Centra los productos si hay solo uno */
+        }
+
+        .card { 
+            background: white; 
+            border-radius: 25px; 
+            overflow: hidden; 
+            box-shadow: var(--shadow); 
+            width: 100%; 
+            max-width: 320px; /* Evita que crezcan demasiado en pantallas grandes */
+            transition: var(--transition);
+        }
+
         .admin-box { background: rgba(255,255,255,0.95); padding: 25px; border-radius: 25px; margin-bottom: 25px; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.3); }
         input, select, textarea { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #eee; border-radius: 15px; outline: none; font-size: 1rem; }
         h4 { color: var(--purple); margin-bottom: 15px; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
 
-        /* BOTONES CONTORNO */
-        .contour-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin: 15px 0; }
-        .btn-contour {
-            padding: 12px; border: 2px solid var(--purple); border-radius: 18px;
-            background: transparent; color: var(--purple); font-weight: 700;
-            cursor: pointer; transition: 0.3s; text-align: center;
+        /* MODALES */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 5000;
+            display: none; align-items: center; justify-content: center;
+            backdrop-filter: blur(5px);
+            padding: 20px;
         }
-        .btn-contour.active { background: var(--purple); color: white; transform: scale(1.05); box-shadow: var(--shadow); }
-
-        /* LOGIN ESTÉTICO */
-        .login-card {
-            max-width: 400px; margin: 50px auto; background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(20px); padding: 40px; border-radius: 30px;
-            border: 1px solid rgba(255,255,255,0.4); text-align: center; color: white;
+        .modal-content { 
+            background: white; padding: 30px; border-radius: 30px; 
+            width: 100%; max-width: 500px; 
+            max-height: 90vh; overflow-y: auto; 
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
-        .login-card input { background: rgba(255,255,255,0.9); border: none; text-align: center; font-size: 1.2rem; }
 
-        /* TABLAS Y VENTAS */
-        .inv-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .inv-table th { background: var(--purple); color: white; padding: 12px; text-align: left; }
-        .inv-table td { padding: 12px; border-bottom: 1px solid #ddd; }
-        .stock-low { color: #ff0000; font-weight: bold; background: rgba(255,0,0,0.05); }
+        /* DISEÑO DE ITEMS EN CARRITO */
+        .cart-item {
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid var(--purple);
+        }
 
         #cart-btn {
             position: fixed; bottom: 25px; right: 25px;
@@ -125,6 +148,7 @@
             .burger { display: block; }
             .btn-nav { width: 100%; justify-content: center; padding: 15px; font-size: 1.1rem; }
             .logo h2 { font-size: 1.1rem; }
+            .menu-grid { grid-template-columns: 1fr; gap: 20px; } /* Un producto por fila en móvil */
         }
     </style>
 </head>
@@ -146,12 +170,10 @@
     </header>
 
     <main>
-        <!-- MENÚ -->
         <section id="view-menu" class="section active">
             <div id="menu-container" class="menu-grid"></div>
         </section>
 
-        <!-- COCINA -->
         <section id="view-kitchen" class="section">
             <h4><i class="fas fa-utensils"></i> PEDIDOS PENDIENTES</h4>
             <div id="kitchen-orders"></div>
@@ -161,9 +183,7 @@
             </div>
         </section>
 
-        <!-- ADMIN -->
         <section id="view-admin" class="section">
-            <!-- Ventas del Día -->
             <div class="admin-box" style="background: var(--purple); color: white;">
                 <h4 style="color: var(--yellow);"><i class="fas fa-chart-line"></i> RESUMEN DE VENTAS (HOY)</h4>
                 <div style="font-size: 2rem; font-weight: 700;">$<span id="total-sales">0.00</span></div>
@@ -182,9 +202,9 @@
                 <input type="text" id="prod-name" placeholder="Nombre del producto">
                 <input type="number" id="prod-price" placeholder="Precio ($)">
                 <div id="contour-inputs">
-                    <input type="text" class="contour-opt" placeholder="Contorno 1 (Ej: Chocolate)">
+                    <input type="text" class="contour-opt" placeholder="Contorno (Ej: Chocolate)">
                 </div>
-                <button onclick="addContourField()" style="background:none; border:none; color:var(--purple); cursor:pointer; font-weight:bold;">+ Añadir otro campo de contorno</button>
+                <button onclick="addContourField()" style="background:none; border:none; color:var(--purple); cursor:pointer; font-weight:bold; margin-bottom:10px;">+ Añadir otro contorno</button>
                 <input type="file" id="prod-img">
                 <button class="btn-nav" onclick="uploadProduct()" style="width:100%; justify-content:center; margin-top:15px;">GUARDAR EN MENÚ</button>
             </div>
@@ -200,14 +220,15 @@
                     <input type="number" id="inv-cost" placeholder="Costo $">
                 </div>
                 <button class="btn-nav" onclick="addInventory()" style="width:100%; justify-content:center;">ACTUALIZAR INVENTARIO</button>
-                <table class="inv-table" id="admin-inventory-table">
-                    <thead><tr><th>Material</th><th>Stock</th><th>Costo</th><th>Acciones</th></tr></thead>
-                    <tbody></tbody>
-                </table>
+                <div style="overflow-x:auto;">
+                    <table class="inv-table" id="admin-inventory-table">
+                        <thead><tr><th>Material</th><th>Stock</th><th>Costo</th><th>Acciones</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
-        <!-- PANTALLA LOGIN -->
         <section id="view-login" class="section">
             <div class="login-card">
                 <i class="fas fa-lock" style="font-size: 3rem; margin-bottom: 20px; color: var(--yellow);"></i>
@@ -220,7 +241,7 @@
         </section>
     </main>
 
-    <!-- MODAL DETALLE PRODUCTO -->
+    <!-- MODALES -->
     <div id="product-modal" class="modal-overlay" onclick="closeModals(event)">
         <div class="modal-content">
             <h3 id="modal-prod-name" style="color:var(--purple); font-size:1.8rem;"></h3>
@@ -230,20 +251,21 @@
         </div>
     </div>
 
-    <!-- MODAL CARRITO -->
     <div id="cart-modal" class="modal-overlay" onclick="closeModals(event)">
         <div class="modal-content">
-            <h3>🛒 Tu Carrito</h3>
-            <div id="cart-list"></div>
-            <hr>
-            <h4 style="margin: 15px 0;">Total: $<span id="cart-total">0.00</span></h4>
+            <h3 style="color:var(--purple); border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">🛒 Detalle de tu Pedido</h3>
+            <div id="cart-list" style="margin-bottom: 20px;"></div>
+            <div style="background: #f0f0f0; padding: 15px; border-radius: 15px; margin-bottom: 20px;">
+                <h4 style="margin:0; justify-content: space-between;">Total a Pagar: <span>$ <span id="cart-total">0.00</span></span></h4>
+            </div>
+            <label style="font-weight: bold; font-size: 0.9rem;">Método de Pago:</label>
             <select id="client-pay-method">
                 <option value="Efectivo">💵 Efectivo</option>
                 <option value="Pago Móvil">📱 Pago Móvil</option>
                 <option value="Transferencia">🏦 Transferencia</option>
             </select>
-            <input type="text" id="client-name" placeholder="¿A nombre de quién?">
-            <button class="btn-nav" style="width:100%; justify-content:center;" onclick="sendOrder()">ENVIAR A COCINA</button>
+            <input type="text" id="client-name" placeholder="Tu nombre para el pedido">
+            <button class="btn-nav" style="width:100%; justify-content:center; margin-top:10px; padding: 15px;" onclick="sendOrder()">ENVIAR A COCINA AHORA</button>
         </div>
     </div>
 
@@ -253,7 +275,6 @@
     </div>
 
     <script>
-        // CONFIGURACIÓN FIREBASE (Mantén tu config original)
         const firebaseConfig = {
             apiKey: "AIzaSyDrNGtxwj0sijnq_vBCTyiRVLO28_D9JG0",
             authDomain: "cravelush-e3277.firebaseapp.com",
@@ -270,7 +291,6 @@
         let selectedContour = "Básico";
         let targetRole = "";
 
-        // UI ANIMATIONS
         function createFloatingIcons() {
             const container = document.getElementById('bg-icons');
             const icons = ['fa-ice-cream', 'fa-cookie', 'fa-candy-cane'];
@@ -294,11 +314,10 @@
             window.scrollTo(0,0);
         }
 
-        // LOGIN SYSTEM
         function showLogin(role) {
             targetRole = role;
             document.getElementById('login-title').innerText = "ACCESO " + role.toUpperCase();
-            document.getElementById('login-desc').innerText = "Introduce la clave de seguridad para continuar.";
+            document.getElementById('login-desc').innerText = "Introduce la clave de seguridad.";
             document.getElementById('pass-input').value = "";
             switchView('view-login');
         }
@@ -310,7 +329,6 @@
             else alert("¡Clave incorrecta!");
         }
 
-        // ADMIN: CONTOURN FIELDS
         function addContourField() {
             const input = document.createElement('input');
             input.type = "text";
@@ -319,7 +337,6 @@
             document.getElementById('contour-inputs').appendChild(input);
         }
 
-        // PRODUCTOS
         function uploadProduct() {
             const name = document.getElementById('prod-name').value;
             const price = parseFloat(document.getElementById('prod-price').value);
@@ -327,11 +344,10 @@
             const contours = Array.from(contourInputs).map(i => i.value).filter(v => v !== "").join(",");
             const file = document.getElementById('prod-img').files[0];
             if(!name || isNaN(price) || !file) return alert("Completa todos los campos");
-
             const reader = new FileReader();
             reader.onload = (e) => {
                 db.ref('products').push({ name, price, contours, img: e.target.result });
-                alert("¡Producto añadido con éxito!");
+                alert("¡Producto añadido!");
                 location.reload();
             };
             reader.readAsDataURL(file);
@@ -343,13 +359,13 @@
             snap.forEach(child => {
                 const p = child.val();
                 container.innerHTML += `
-                    <div class="card" style="background:white; border-radius:25px; overflow:hidden; box-shadow:var(--shadow);">
+                    <div class="card">
                         <img src="${p.img}" style="width:100%; height:200px; object-fit:cover;">
                         <div style="padding:20px; text-align:center;">
                             <h3 style="color:var(--purple);">${p.name}</h3>
                             <p style="font-weight:700; font-size:1.3rem; margin:10px 0;">$${p.price.toFixed(2)}</p>
                             <button class="btn-nav" style="width:100%; justify-content:center;" 
-                                onclick="openProductDetail('${p.name}', ${p.price}, '${p.contours}')">PEDIR AHORA</button>
+                                onclick="openProductDetail('${p.name}', ${p.price}, '${p.contours}')">PEDIR</button>
                         </div>
                     </div>
                 `;
@@ -382,15 +398,19 @@
             document.getElementById('product-modal').style.display = 'none';
         }
 
-        // CARRITO Y ORDENES
         function openCart() {
             if(cart.length === 0) return alert("El carrito está vacío");
             const list = document.getElementById('cart-list');
             let total = 0; list.innerHTML = "";
             cart.forEach((item, index) => {
                 total += item.price;
-                list.innerHTML += `<div style="display:flex; justify-content:space-between; margin:8px 0;">
-                    <span>${item.name} (${item.contour})</span> <b>$${item.price.toFixed(2)}</b>
+                list.innerHTML += `
+                <div class="cart-item">
+                    <div>
+                        <b style="color:var(--purple);">${item.name}</b><br>
+                        <small>Contorno: ${item.contour}</small>
+                    </div>
+                    <b>$${item.price.toFixed(2)}</b>
                 </div>`;
             });
             document.getElementById('cart-total').innerText = total.toFixed(2);
@@ -399,7 +419,7 @@
 
         function sendOrder() {
             const name = document.getElementById('client-name').value;
-            if(!name) return alert("Escribe tu nombre");
+            if(!name) return alert("Escribe tu nombre para el pedido");
             const order = {
                 client: name,
                 items: cart.map(i => `${i.name} [${i.contour}]`).join(", "),
@@ -408,13 +428,12 @@
                 time: new Date().toLocaleString()
             };
             db.ref('orders').push(order);
-            alert("¡Pedido enviado! Preparando tu delicia...");
+            alert("¡Pedido enviado a cocina! 🍦");
             cart = [];
             document.getElementById('cart-count').innerText = "0";
             document.getElementById('cart-modal').style.display = 'none';
         }
 
-        // COCINA Y VENTAS
         db.ref('orders').on('value', snap => {
             const container = document.getElementById('kitchen-orders');
             container.innerHTML = "";
@@ -423,15 +442,12 @@
                 container.innerHTML += `
                     <div class="admin-box" style="border-left: 10px solid var(--yellow);">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                            <div>
-                                <b style="font-size:1.2rem;">${o.client}</b><br>
-                                <small>${o.time}</small>
-                            </div>
+                            <div><b>${o.client}</b><br><small>${o.time}</small></div>
                             <span style="background:var(--purple); color:white; padding:5px 10px; border-radius:10px; font-size:0.8rem;">${o.method}</span>
                         </div>
-                        <p style="margin:15px 0; font-size:1.1rem; color:#444;">${o.items}</p>
+                        <p style="margin:15px 0; color:#444;">${o.items}</p>
                         <button class="btn-nav" style="width:100%; justify-content:center; background:#28a745; color:white;" 
-                            onclick="completeOrder('${child.key}')">MARCAR COMO LISTO ✅</button>
+                            onclick="completeOrder('${child.key}')">LISTO ✅</button>
                     </div>
                 `;
             });
@@ -440,23 +456,17 @@
         function completeOrder(key) {
             db.ref('orders/' + key).once('value', snap => {
                 const data = snap.val();
-                db.ref('sales_history').push(data); // Mueve a historial de ventas
+                db.ref('sales_history').push(data);
                 db.ref('orders/' + key).remove();
             });
         }
 
-        // DASHBOARD VENTAS
         db.ref('sales_history').on('value', snap => {
             let total = 0;
-            snap.forEach(child => {
-                const sale = child.val();
-                // Opcional: Filtrar solo las de hoy
-                total += parseFloat(sale.total);
-            });
+            snap.forEach(child => { total += parseFloat(child.val().total); });
             document.getElementById('total-sales').innerText = total.toFixed(2);
         });
 
-        // EXPORTACIÓN EXCEL
         function exportSalesExcel() {
             db.ref('sales_history').once('value', snap => {
                 let csv = "Fecha,Cliente,Pedido,Metodo,Total\n";
@@ -468,17 +478,6 @@
             });
         }
 
-        function exportInventoryExcel() {
-            db.ref('inventory').once('value', snap => {
-                let csv = "Material,Cantidad,Costo Invertido\n";
-                snap.forEach(child => {
-                    const i = child.val();
-                    csv += `"${i.name}","${i.qty}","${i.cost}"\n`;
-                });
-                downloadCSV(csv, "Inventario_CraveLush.csv");
-            });
-        }
-
         function downloadCSV(csv, filename) {
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
@@ -487,14 +486,12 @@
             link.click();
         }
 
-        // WHATSAPP SHARE
         function shareSalesWhatsApp() {
             const total = document.getElementById('total-sales').innerText;
-            const text = encodeURIComponent(`📊 *REPORTE CRAVE LUSH*\nVentas Totales: $${total}\n¡Buen trabajo equipo! 🍦`);
+            const text = encodeURIComponent(`📊 *REPORTE CRAVE LUSH*\nVentas Totales: $${total}`);
             window.open(`https://wa.me/?text=${text}`, '_blank');
         }
 
-        // INVENTARIO
         function addInventory() {
             const name = document.getElementById('inv-name').value;
             const qty = document.getElementById('inv-qty').value;
