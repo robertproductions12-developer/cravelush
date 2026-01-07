@@ -78,12 +78,11 @@
         .section.active { display: block; }
         @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* --- GRID DE PRODUCTOS OPTIMIZADO PARA MÓVILES --- */
         .menu-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
             gap: 25px; 
-            justify-items: center; /* Centra los productos si hay solo uno */
+            justify-items: center;
         }
 
         .card { 
@@ -92,13 +91,22 @@
             overflow: hidden; 
             box-shadow: var(--shadow); 
             width: 100%; 
-            max-width: 320px; /* Evita que crezcan demasiado en pantallas grandes */
+            max-width: 320px;
             transition: var(--transition);
         }
 
         .admin-box { background: rgba(255,255,255,0.95); padding: 25px; border-radius: 25px; margin-bottom: 25px; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.3); }
         input, select, textarea { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #eee; border-radius: 15px; outline: none; font-size: 1rem; }
         h4 { color: var(--purple); margin-bottom: 15px; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+
+        /* BOTONES CONTORNO */
+        .contour-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin: 15px 0; }
+        .btn-contour {
+            padding: 12px; border: 2px solid var(--purple); border-radius: 18px;
+            background: transparent; color: var(--purple); font-weight: 700;
+            cursor: pointer; transition: 0.3s; text-align: center;
+        }
+        .btn-contour.active { background: var(--purple); color: white; transform: scale(1.05); box-shadow: var(--shadow); }
 
         /* MODALES */
         .modal-overlay {
@@ -118,14 +126,9 @@
 
         /* DISEÑO DE ITEMS EN CARRITO */
         .cart-item {
-            background: #f9f9f9;
-            padding: 12px;
-            border-radius: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 5px solid var(--purple);
+            background: #f9f9f9; padding: 12px; border-radius: 15px;
+            margin-bottom: 10px; display: flex; justify-content: space-between;
+            align-items: center; border-left: 5px solid var(--purple);
         }
 
         #cart-btn {
@@ -137,7 +140,14 @@
             border: 4px solid var(--purple);
         }
 
-        /* RESPONSIVE MOBILE */
+        /* GESTIÓN DE PRODUCTOS EN ADMIN */
+        .admin-prod-item {
+            display: flex; align-items: center; justify-content: space-between;
+            background: white; padding: 10px; border-radius: 15px; margin-bottom: 10px;
+            border: 1px solid #eee;
+        }
+        .admin-prod-item img { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; }
+
         @media (max-width: 768px) {
             .nav-links {
                 position: fixed; top: 0; right: -100%; width: 70%; height: 100vh;
@@ -148,7 +158,7 @@
             .burger { display: block; }
             .btn-nav { width: 100%; justify-content: center; padding: 15px; font-size: 1.1rem; }
             .logo h2 { font-size: 1.1rem; }
-            .menu-grid { grid-template-columns: 1fr; gap: 20px; } /* Un producto por fila en móvil */
+            .menu-grid { grid-template-columns: 1fr; gap: 20px; }
         }
     </style>
 </head>
@@ -187,18 +197,21 @@
             <div class="admin-box" style="background: var(--purple); color: white;">
                 <h4 style="color: var(--yellow);"><i class="fas fa-chart-line"></i> RESUMEN DE VENTAS (HOY)</h4>
                 <div style="font-size: 2rem; font-weight: 700;">$<span id="total-sales">0.00</span></div>
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
                     <button class="btn-nav" onclick="exportSalesExcel()" style="background: #28a745; color: white; border: none;">
-                        <i class="fas fa-file-excel"></i> EXCEL VENTAS
+                        <i class="fas fa-file-excel"></i> EXCEL
                     </button>
                     <button class="btn-nav" onclick="shareSalesWhatsApp()" style="background: #25D366; color: white; border: none;">
                         <i class="fab fa-whatsapp"></i> COMPARTIR
+                    </button>
+                    <button class="btn-nav" onclick="resetSales()" style="background: #dc3545; color: white; border: none;">
+                        <i class="fas fa-trash-alt"></i> RESET VENTAS
                     </button>
                 </div>
             </div>
 
             <div class="admin-box">
-                <h4><i class="fas fa-plus-circle"></i> NUEVO PRODUCTO</h4>
+                <h4 id="form-title"><i class="fas fa-plus-circle"></i> NUEVO PRODUCTO</h4>
                 <input type="text" id="prod-name" placeholder="Nombre del producto">
                 <input type="number" id="prod-price" placeholder="Precio ($)">
                 <div id="contour-inputs">
@@ -206,14 +219,20 @@
                 </div>
                 <button onclick="addContourField()" style="background:none; border:none; color:var(--purple); cursor:pointer; font-weight:bold; margin-bottom:10px;">+ Añadir otro contorno</button>
                 <input type="file" id="prod-img">
-                <button class="btn-nav" onclick="uploadProduct()" style="width:100%; justify-content:center; margin-top:15px;">GUARDAR EN MENÚ</button>
+                <div id="edit-actions" style="display: none; gap: 10px;">
+                    <button class="btn-nav" onclick="uploadProduct()" style="flex:1; justify-content:center; background: var(--purple); color: white;">ACTUALIZAR</button>
+                    <button class="btn-nav" onclick="cancelEdit()" style="flex:1; justify-content:center; background: #666; color: white;">CANCELAR</button>
+                </div>
+                <button id="save-btn" class="btn-nav" onclick="uploadProduct()" style="width:100%; justify-content:center; margin-top:15px;">GUARDAR EN MENÚ</button>
+            </div>
+
+            <div class="admin-box">
+                <h4><i class="fas fa-list"></i> GESTIONAR PRODUCTOS</h4>
+                <div id="admin-product-list"></div>
             </div>
 
             <div class="admin-box">
                 <h4><i class="fas fa-warehouse"></i> INVENTARIO & GASTOS</h4>
-                <button class="btn-nav" onclick="exportInventoryExcel()" style="background: #217346; color: white; margin-bottom: 15px; width: 100%; justify-content: center;">
-                    <i class="fas fa-download"></i> DESCARGAR REPORTE GASTOS
-                </button>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
                     <input type="text" id="inv-name" placeholder="Material">
                     <input type="number" id="inv-qty" placeholder="Stock">
@@ -230,18 +249,28 @@
         </section>
 
         <section id="view-login" class="section">
-            <div class="login-card">
+            <div class="login-card" style="max-width: 400px; margin: auto; background: white; padding: 30px; border-radius: 20px; text-align: center;">
                 <i class="fas fa-lock" style="font-size: 3rem; margin-bottom: 20px; color: var(--yellow);"></i>
                 <h2 id="login-title">ACCESO RESTRINGIDO</h2>
                 <p id="login-desc" style="margin-bottom: 20px; opacity: 0.8;"></p>
                 <input type="password" id="pass-input" placeholder="••••">
                 <button class="btn-nav" onclick="attemptLogin()" style="width:100%; justify-content:center; margin-top:20px;">ENTRAR</button>
-                <button onclick="switchView('view-menu')" style="background:none; border:none; color:white; margin-top:15px; cursor:pointer;">Cancelar</button>
+                <button onclick="switchView('view-menu')" style="background:none; border:none; color:var(--purple); margin-top:15px; cursor:pointer;">Cancelar</button>
             </div>
         </section>
     </main>
 
-    <!-- MODALES -->
+    <!-- MODAL CONFIRMACIÓN (YA TE LO PREPARAMOS) -->
+    <div id="confirmed-modal" class="modal-overlay">
+        <div class="modal-content" style="text-align: center;">
+            <img src="https://cdn-icons-png.flaticon.com/512/3448/3448613.png" style="width: 150px; margin-bottom: 20px;">
+            <h2 style="color: var(--purple);">¡PEDIDO RECIBIDO!</h2>
+            <p style="font-size: 1.2rem; margin: 15px 0;">¡Ya te lo estamos preparando con mucho amor! 🍦</p>
+            <button class="btn-nav" style="margin: auto;" onclick="closeConfirmed()">ESTUPENDO</button>
+        </div>
+    </div>
+
+    <!-- MODALES CARRITO Y DETALLE -->
     <div id="product-modal" class="modal-overlay" onclick="closeModals(event)">
         <div class="modal-content">
             <h3 id="modal-prod-name" style="color:var(--purple); font-size:1.8rem;"></h3>
@@ -253,19 +282,16 @@
 
     <div id="cart-modal" class="modal-overlay" onclick="closeModals(event)">
         <div class="modal-content">
-            <h3 style="color:var(--purple); border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">🛒 Detalle de tu Pedido</h3>
+            <h3>🛒 Detalle de tu Pedido</h3>
             <div id="cart-list" style="margin-bottom: 20px;"></div>
-            <div style="background: #f0f0f0; padding: 15px; border-radius: 15px; margin-bottom: 20px;">
-                <h4 style="margin:0; justify-content: space-between;">Total a Pagar: <span>$ <span id="cart-total">0.00</span></span></h4>
-            </div>
-            <label style="font-weight: bold; font-size: 0.9rem;">Método de Pago:</label>
+            <h4 style="background: #f0f0f0; padding: 15px; border-radius: 15px;">Total: $ <span id="cart-total">0.00</span></h4>
             <select id="client-pay-method">
                 <option value="Efectivo">💵 Efectivo</option>
                 <option value="Pago Móvil">📱 Pago Móvil</option>
                 <option value="Transferencia">🏦 Transferencia</option>
             </select>
-            <input type="text" id="client-name" placeholder="Tu nombre para el pedido">
-            <button class="btn-nav" style="width:100%; justify-content:center; margin-top:10px; padding: 15px;" onclick="sendOrder()">ENVIAR A COCINA AHORA</button>
+            <input type="text" id="client-name" placeholder="Tu nombre">
+            <button class="btn-nav" style="width:100%; justify-content:center; margin-top:10px;" onclick="sendOrder()">ENVIAR A COCINA</button>
         </div>
     </div>
 
@@ -290,20 +316,7 @@
         let selectedProduct = null;
         let selectedContour = "Básico";
         let targetRole = "";
-
-        function createFloatingIcons() {
-            const container = document.getElementById('bg-icons');
-            const icons = ['fa-ice-cream', 'fa-cookie', 'fa-candy-cane'];
-            for(let i=0; i<15; i++) {
-                const el = document.createElement('i');
-                el.className = `fas ${icons[Math.floor(Math.random()*icons.length)]} floating-cone`;
-                el.style.left = Math.random() * 100 + 'vw';
-                el.style.animationDelay = Math.random() * 5 + 's';
-                el.style.fontSize = (Math.random() * 2 + 1) + 'rem';
-                container.appendChild(el);
-            }
-        }
-        createFloatingIcons();
+        let editKey = null;
 
         function toggleMenu() { document.getElementById('nav-menu').classList.toggle('active'); }
 
@@ -311,14 +324,11 @@
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.getElementById('nav-menu').classList.remove('active');
-            window.scrollTo(0,0);
         }
 
         function showLogin(role) {
             targetRole = role;
             document.getElementById('login-title').innerText = "ACCESO " + role.toUpperCase();
-            document.getElementById('login-desc').innerText = "Introduce la clave de seguridad.";
-            document.getElementById('pass-input').value = "";
             switchView('view-login');
         }
 
@@ -329,49 +339,110 @@
             else alert("¡Clave incorrecta!");
         }
 
-        function addContourField() {
+        function addContourField(val = "") {
             const input = document.createElement('input');
             input.type = "text";
             input.className = "contour-opt";
+            input.value = val;
             input.placeholder = "Otro contorno...";
             document.getElementById('contour-inputs').appendChild(input);
         }
 
+        // --- PRODUCTOS CRUD ---
         function uploadProduct() {
             const name = document.getElementById('prod-name').value;
             const price = parseFloat(document.getElementById('prod-price').value);
             const contourInputs = document.querySelectorAll('.contour-opt');
             const contours = Array.from(contourInputs).map(i => i.value).filter(v => v !== "").join(",");
-            const file = document.getElementById('prod-img').files[0];
-            if(!name || isNaN(price) || !file) return alert("Completa todos los campos");
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                db.ref('products').push({ name, price, contours, img: e.target.result });
-                alert("¡Producto añadido!");
+            const fileInput = document.getElementById('prod-img');
+            
+            if(!name || isNaN(price)) return alert("Nombre y precio son obligatorios");
+
+            const saveData = (imgUrl) => {
+                const data = { name, price, contours };
+                if(imgUrl) data.img = imgUrl;
+
+                if(editKey) {
+                    db.ref('products/' + editKey).update(data);
+                    alert("¡Producto actualizado!");
+                } else {
+                    if(!imgUrl) return alert("Debes subir una imagen para nuevos productos");
+                    db.ref('products').push(data);
+                    alert("¡Producto guardado!");
+                }
                 location.reload();
             };
-            reader.readAsDataURL(file);
+
+            if(fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => saveData(e.target.result);
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                saveData(null);
+            }
+        }
+
+        function editProduct(key, data) {
+            editKey = key;
+            document.getElementById('form-title').innerText = "EDITAR PRODUCTO";
+            document.getElementById('prod-name').value = data.name;
+            document.getElementById('prod-price').value = data.price;
+            document.getElementById('contour-inputs').innerHTML = "";
+            if(data.contours) {
+                data.contours.split(',').forEach(c => addContourField(c));
+            } else {
+                addContourField();
+            }
+            document.getElementById('save-btn').style.display = "none";
+            document.getElementById('edit-actions').style.display = "flex";
+            window.scrollTo(0,0);
+        }
+
+        function cancelEdit() {
+            location.reload();
+        }
+
+        function deleteProduct(key) {
+            if(confirm("¿Estás seguro de eliminar este producto?")) {
+                db.ref('products/' + key).remove();
+            }
         }
 
         db.ref('products').on('value', snap => {
-            const container = document.getElementById('menu-container');
-            container.innerHTML = "";
+            const menuContainer = document.getElementById('menu-container');
+            const adminContainer = document.getElementById('admin-product-list');
+            menuContainer.innerHTML = "";
+            adminContainer.innerHTML = "";
+
             snap.forEach(child => {
                 const p = child.val();
-                container.innerHTML += `
+                // Menu Público
+                menuContainer.innerHTML += `
                     <div class="card">
                         <img src="${p.img}" style="width:100%; height:200px; object-fit:cover;">
                         <div style="padding:20px; text-align:center;">
                             <h3 style="color:var(--purple);">${p.name}</h3>
                             <p style="font-weight:700; font-size:1.3rem; margin:10px 0;">$${p.price.toFixed(2)}</p>
-                            <button class="btn-nav" style="width:100%; justify-content:center;" 
-                                onclick="openProductDetail('${p.name}', ${p.price}, '${p.contours}')">PEDIR</button>
+                            <button class="btn-nav" style="width:100%; justify-content:center;" onclick="openProductDetail('${p.name}', ${p.price}, '${p.contours}')">PEDIR</button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
+                
+                // Lista Admin
+                adminContainer.innerHTML += `
+                    <div class="admin-prod-item">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="${p.img}">
+                            <b>${p.name}</b>
+                        </div>
+                        <div style="display:flex; gap:5px;">
+                            <button class="btn-nav" style="padding:5px 10px; background:var(--purple); color:white;" onclick='editProduct("${child.key}", ${JSON.stringify(p)})'><i class="fas fa-edit"></i></button>
+                            <button class="btn-nav" style="padding:5px 10px; background:#dc3545; color:white;" onclick='deleteProduct("${child.key}")'><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
             });
         });
 
+        // --- CARRITO ---
         function openProductDetail(name, price, contours) {
             selectedProduct = { name, price };
             selectedContour = "Básico";
@@ -402,16 +473,9 @@
             if(cart.length === 0) return alert("El carrito está vacío");
             const list = document.getElementById('cart-list');
             let total = 0; list.innerHTML = "";
-            cart.forEach((item, index) => {
+            cart.forEach(item => {
                 total += item.price;
-                list.innerHTML += `
-                <div class="cart-item">
-                    <div>
-                        <b style="color:var(--purple);">${item.name}</b><br>
-                        <small>Contorno: ${item.contour}</small>
-                    </div>
-                    <b>$${item.price.toFixed(2)}</b>
-                </div>`;
+                list.innerHTML += `<div class="cart-item"><span>${item.name} (${item.contour})</span><b>$${item.price.toFixed(2)}</b></div>`;
             });
             document.getElementById('cart-total').innerText = total.toFixed(2);
             document.getElementById('cart-modal').style.display = 'flex';
@@ -419,7 +483,7 @@
 
         function sendOrder() {
             const name = document.getElementById('client-name').value;
-            if(!name) return alert("Escribe tu nombre para el pedido");
+            if(!name) return alert("Escribe tu nombre");
             const order = {
                 client: name,
                 items: cart.map(i => `${i.name} [${i.contour}]`).join(", "),
@@ -428,38 +492,41 @@
                 time: new Date().toLocaleString()
             };
             db.ref('orders').push(order);
-            alert("¡Pedido enviado a cocina! 🍦");
+            document.getElementById('cart-modal').style.display = 'none';
+            document.getElementById('confirmed-modal').style.display = 'flex';
             cart = [];
             document.getElementById('cart-count').innerText = "0";
-            document.getElementById('cart-modal').style.display = 'none';
         }
 
-        db.ref('orders').on('value', snap => {
-            const container = document.getElementById('kitchen-orders');
-            container.innerHTML = "";
+        function closeConfirmed() {
+            document.getElementById('confirmed-modal').style.display = 'none';
+            switchView('view-menu');
+        }
+
+        function resetSales() {
+            if(confirm("¿Seguro que quieres borrar todas las ventas hoy y empezar de cero?")) {
+                db.ref('sales_history').remove();
+                alert("Ventas reseteadas.");
+            }
+        }
+
+        // --- INVENTARIO (Simplificado para el ejemplo) ---
+        function addInventory() {
+            const name = document.getElementById('inv-name').value;
+            const qty = document.getElementById('inv-qty').value;
+            const cost = document.getElementById('inv-cost').value;
+            if(!name || !qty) return;
+            db.ref('inventory').push({ name, qty, cost });
+        }
+
+        db.ref('inventory').on('value', snap => {
+            const tbody = document.querySelector('#admin-inventory-table tbody');
+            tbody.innerHTML = "";
             snap.forEach(child => {
-                const o = child.val();
-                container.innerHTML += `
-                    <div class="admin-box" style="border-left: 10px solid var(--yellow);">
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                            <div><b>${o.client}</b><br><small>${o.time}</small></div>
-                            <span style="background:var(--purple); color:white; padding:5px 10px; border-radius:10px; font-size:0.8rem;">${o.method}</span>
-                        </div>
-                        <p style="margin:15px 0; color:#444;">${o.items}</p>
-                        <button class="btn-nav" style="width:100%; justify-content:center; background:#28a745; color:white;" 
-                            onclick="completeOrder('${child.key}')">LISTO ✅</button>
-                    </div>
-                `;
+                const i = child.val();
+                tbody.innerHTML += `<tr><td>${i.name}</td><td>${i.qty}</td><td>$${i.cost}</td><td><button onclick='db.ref("inventory/${child.key}").remove()'>X</button></td></tr>`;
             });
         });
-
-        function completeOrder(key) {
-            db.ref('orders/' + key).once('value', snap => {
-                const data = snap.val();
-                db.ref('sales_history').push(data);
-                db.ref('orders/' + key).remove();
-            });
-        }
 
         db.ref('sales_history').on('value', snap => {
             let total = 0;
@@ -467,70 +534,39 @@
             document.getElementById('total-sales').innerText = total.toFixed(2);
         });
 
-        function exportSalesExcel() {
-            db.ref('sales_history').once('value', snap => {
-                let csv = "Fecha,Cliente,Pedido,Metodo,Total\n";
-                snap.forEach(child => {
-                    const s = child.val();
-                    csv += `"${s.time}","${s.client}","${s.items}","${s.method}","${s.total}"\n`;
-                });
-                downloadCSV(csv, "Ventas_CraveLush.csv");
-            });
-        }
-
-        function downloadCSV(csv, filename) {
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.setAttribute("download", filename);
-            link.click();
-        }
-
-        function shareSalesWhatsApp() {
-            const total = document.getElementById('total-sales').innerText;
-            const text = encodeURIComponent(`📊 *REPORTE CRAVE LUSH*\nVentas Totales: $${total}`);
-            window.open(`https://wa.me/?text=${text}`, '_blank');
-        }
-
-        function addInventory() {
-            const name = document.getElementById('inv-name').value;
-            const qty = document.getElementById('inv-qty').value;
-            const cost = document.getElementById('inv-cost').value;
-            if(!name || !qty) return;
-            db.ref('inventory').push({ name, qty, cost });
-            document.getElementById('inv-name').value = "";
-            document.getElementById('inv-qty').value = "";
-            document.getElementById('inv-cost').value = "";
-        }
-
-        db.ref('inventory').on('value', snap => {
-            const tbody = document.querySelector('#admin-inventory-table tbody');
-            const kitchenList = document.getElementById('kitchen-inventory-list');
-            tbody.innerHTML = ""; kitchenList.innerHTML = "";
+        db.ref('orders').on('value', snap => {
+            const container = document.getElementById('kitchen-orders');
+            container.innerHTML = "";
             snap.forEach(child => {
-                const i = child.val();
-                const low = i.qty < 5 ? 'stock-low' : '';
-                tbody.innerHTML += `<tr class="${low}">
-                    <td>${i.name}</td><td>${i.qty}</td><td>$${i.cost || 0}</td>
-                    <td><button onclick="db.ref('inventory/${child.key}').remove()">X</button></td>
-                </tr>`;
-                kitchenList.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; margin-bottom:10px; padding:10px; background:#f4f4f4; border-radius:10px;">
-                        <span>${i.name} (Stock: ${i.qty})</span>
-                        <button onclick="reduceStock('${child.key}', ${i.qty})" style="padding:2px 10px;">-1 Salida</button>
-                    </div>
-                `;
+                const o = child.val();
+                container.innerHTML += `<div class="admin-box" style="border-left: 10px solid var(--yellow);">
+                    <b>${o.client}</b> (${o.method})<br><p>${o.items}</p>
+                    <button class="btn-nav" style="background:#28a745; color:white; width:100%; margin-top:10px;" onclick="completeOrder('${child.key}')">LISTO ✅</button>
+                </div>`;
             });
         });
 
-        function reduceStock(key, current) {
-            if(current > 0) db.ref('inventory/' + key + '/qty').set(current - 1);
+        function completeOrder(key) {
+            db.ref('orders/' + key).once('value', snap => {
+                db.ref('sales_history').push(snap.val());
+                db.ref('orders/' + key).remove();
+            });
         }
 
         function closeModals(e) {
             if(e.target.className === 'modal-overlay') {
                 document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
             }
+        }
+
+        // Crear iconos de fondo
+        const container = document.getElementById('bg-icons');
+        for(let i=0; i<15; i++) {
+            const el = document.createElement('i');
+            el.className = 'fas fa-ice-cream floating-cone';
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.animationDelay = Math.random() * 5 + 's';
+            container.appendChild(el);
         }
     </script>
 </body>
