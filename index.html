@@ -11,6 +11,7 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
 
     <style>
         :root {
@@ -38,7 +39,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* --- ELEMENTOS 3D FLOTANTES --- */
         .bg-icons { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; overflow: hidden; }
         .floating-cone { position: absolute; color: rgba(255,255,255,0.2); font-size: 3rem; animation: float 10s infinite linear; }
         @keyframes float {
@@ -48,7 +48,6 @@
             100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
 
-        /* --- HEADER RESPONSIVE --- */
         header.main-nav {
             position: fixed; top: 0; width: 100%;
             background: rgba(111, 44, 145, 0.9);
@@ -73,33 +72,16 @@
         }
         .btn-nav:hover { transform: translateY(-3px); background: white; box-shadow: var(--shadow); }
 
-        /* --- SECCIONES --- */
         .section { display: none; padding: 30px 5%; max-width: 1200px; margin: 90px auto 0; animation: slideUp 0.6s ease; }
         .section.active { display: block; }
         @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .menu-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-            gap: 25px; 
-            justify-items: center;
-        }
-
-        .card { 
-            background: white; 
-            border-radius: 25px; 
-            overflow: hidden; 
-            box-shadow: var(--shadow); 
-            width: 100%; 
-            max-width: 320px;
-            transition: var(--transition);
-        }
-
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; justify-items: center; }
+        .card { background: white; border-radius: 25px; overflow: hidden; box-shadow: var(--shadow); width: 100%; max-width: 320px; transition: var(--transition); }
         .admin-box { background: rgba(255,255,255,0.95); padding: 25px; border-radius: 25px; margin-bottom: 25px; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.3); }
         input, select, textarea { width: 100%; padding: 14px; margin: 8px 0; border: 2px solid #eee; border-radius: 15px; outline: none; font-size: 1rem; }
         h4 { color: var(--purple); margin-bottom: 15px; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
 
-        /* BOTONES CONTORNO */
         .contour-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin: 15px 0; }
         .btn-contour {
             padding: 12px; border: 2px solid var(--purple); border-radius: 18px;
@@ -108,63 +90,33 @@
         }
         .btn-contour.active { background: var(--purple); color: white; transform: scale(1.05); box-shadow: var(--shadow); }
 
-        /* MODALES */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8); z-index: 5000;
             display: none; align-items: center; justify-content: center;
-            backdrop-filter: blur(5px);
-            padding: 20px;
+            backdrop-filter: blur(5px); padding: 20px;
         }
-        .modal-content { 
-            background: white; padding: 30px; border-radius: 30px; 
-            width: 100%; max-width: 500px; 
-            max-height: 90vh; overflow-y: auto; 
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-
-        .cart-item {
-            background: #f9f9f9; padding: 12px; border-radius: 15px;
-            margin-bottom: 10px; display: flex; justify-content: space-between;
-            align-items: center; border-left: 5px solid var(--purple);
-        }
+        .modal-content { background: white; padding: 30px; border-radius: 30px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .cart-item { background: #f9f9f9; padding: 12px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--purple); }
 
         #cart-btn {
-            position: fixed; bottom: 25px; right: 25px;
-            background: var(--yellow); color: var(--purple);
-            width: 70px; height: 70px; border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 1.8rem; cursor: pointer; z-index: 2000; box-shadow: var(--shadow);
-            border: 4px solid var(--purple);
+            position: fixed; bottom: 25px; right: 25px; background: var(--yellow); color: var(--purple);
+            width: 70px; height: 70px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 1.8rem; cursor: pointer; z-index: 2000; box-shadow: var(--shadow); border: 4px solid var(--purple);
         }
 
         .low-stock { color: #ff4d4d !important; font-weight: bold; }
-
-        .admin-prod-item {
-            display: flex; align-items: center; justify-content: space-between;
-            background: white; padding: 10px; border-radius: 15px; margin-bottom: 10px;
-            border: 1px solid #eee;
-        }
+        .admin-prod-item { display: flex; align-items: center; justify-content: space-between; background: white; padding: 10px; border-radius: 15px; margin-bottom: 10px; border: 1px solid #eee; }
         .admin-prod-item img { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; }
 
-        /* FOOTER ESTILO */
-        footer {
-            background: rgba(111, 44, 145, 0.95);
-            color: white; padding: 30px 5%; text-align: center;
-            margin-top: 50px; border-top: 3px solid var(--yellow);
-        }
+        footer { background: rgba(111, 44, 145, 0.95); color: white; padding: 30px 5%; text-align: center; margin-top: 50px; border-top: 3px solid var(--yellow); }
         .footer-icons { display: flex; justify-content: center; gap: 25px; margin-bottom: 15px; }
         .footer-icons a { color: var(--yellow); font-size: 1.8rem; transition: var(--transition); }
         .footer-icons a:hover { color: white; transform: translateY(-5px); }
         .dev-text { font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; color: #ffca2c; }
 
         @media (max-width: 768px) {
-            .nav-links {
-                position: fixed; top: 0; right: -100%; width: 70%; height: 100vh;
-                background: var(--purple); flex-direction: column; padding: 80px 20px;
-                transition: 0.5s; box-shadow: -5px 0 20px rgba(0,0,0,0.3);
-            }
+            .nav-links { position: fixed; top: 0; right: -100%; width: 70%; height: 100vh; background: var(--purple); flex-direction: column; padding: 80px 20px; transition: 0.5s; box-shadow: -5px 0 20px rgba(0,0,0,0.3); }
             .nav-links.active { right: 0; }
             .burger { display: block; }
             .btn-nav { width: 100%; justify-content: center; padding: 15px; font-size: 1.1rem; }
@@ -191,10 +143,12 @@
     </header>
 
     <main>
+        <!-- SECCIÓN MENÚ -->
         <section id="view-menu" class="section active">
             <div id="menu-container" class="menu-grid"></div>
         </section>
 
+        <!-- SECCIÓN COCINA -->
         <section id="view-kitchen" class="section">
             <h4><i class="fas fa-utensils"></i> PEDIDOS PENDIENTES</h4>
             <div id="kitchen-orders"></div>
@@ -204,31 +158,27 @@
             </div>
         </section>
 
+        <!-- SECCIÓN ADMIN -->
         <section id="view-admin" class="section">
             <div class="admin-box" style="background: var(--purple); color: white;">
                 <h4 style="color: var(--yellow);"><i class="fas fa-chart-line"></i> RESUMEN DE VENTAS (HOY)</h4>
                 <div style="font-size: 2rem; font-weight: 700;">$<span id="total-sales">0.00</span></div>
                 <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-                    <button class="btn-nav" onclick="exportSalesExcel()" style="background: #28a745; color: white; border: none;">
-                        <i class="fas fa-file-excel"></i> EXCEL
-                    </button>
-                    <button class="btn-nav" onclick="shareSalesWhatsApp()" style="background: #25D366; color: white; border: none;">
-                        <i class="fab fa-whatsapp"></i> COMPARTIR
-                    </button>
-                    <button class="btn-nav" onclick="resetSales()" style="background: #dc3545; color: white; border: none;">
-                        <i class="fas fa-trash-alt"></i> RESET VENTAS
-                    </button>
+                    <button class="btn-nav" onclick="exportSalesExcel()" style="background: #28a745; color: white; border: none;"><i class="fas fa-file-excel"></i> EXCEL</button>
+                    <button class="btn-nav" onclick="shareSalesWhatsApp()" style="background: #25D366; color: white; border: none;"><i class="fab fa-whatsapp"></i> COMPARTIR</button>
+                    <button class="btn-nav" onclick="resetSales()" style="background: #dc3545; color: white; border: none;"><i class="fas fa-trash-alt"></i> RESET VENTAS</button>
                 </div>
             </div>
 
             <div class="admin-box">
-                <h4><i class="fas fa-money-bill-wave"></i> CONFIGURACIÓN DE MÉTODOS DE PAGO</h4>
+                <h4><i class="fas fa-money-bill-wave"></i> CONFIGURACIÓN DE PAGO Y TASA</h4>
                 <input type="text" id="pay-banco" placeholder="Nombre del Banco">
                 <input type="text" id="pay-phone" placeholder="Teléfono Pago Móvil">
                 <input type="text" id="pay-rif" placeholder="RIF / Cédula">
-                <input type="text" id="pay-acc" placeholder="Número de Cuenta (Transferencia)">
-                <input type="number" id="manual-dollar" placeholder="Tasa Dólar Manual (Opcional)">
-                <button class="btn-nav" onclick="savePaymentInfo()" style="width:100%; justify-content:center; background: var(--purple); color:white;">GUARDAR DATOS Y TASA</button>
+                <input type="text" id="pay-acc" placeholder="Número de Cuenta">
+                <label style="font-size: 0.8rem; font-weight: bold; color: var(--purple);">Tasa del Dólar (Fija):</label>
+                <input type="number" id="manual-dollar" placeholder="Ej: 54.50" step="0.01">
+                <button class="btn-nav" onclick="savePaymentInfo()" style="width:100%; justify-content:center; background: var(--purple); color:white;">GUARDAR CONFIGURACIÓN</button>
             </div>
 
             <div class="admin-box">
@@ -240,10 +190,6 @@
                 </div>
                 <button onclick="addContourField()" style="background:none; border:none; color:var(--purple); cursor:pointer; font-weight:bold; margin-bottom:10px;">+ Añadir otro contorno</button>
                 <input type="file" id="prod-img">
-                <div id="edit-actions" style="display: none; gap: 10px;">
-                    <button class="btn-nav" onclick="uploadProduct()" style="flex:1; justify-content:center; background: var(--purple); color: white;">ACTUALIZAR</button>
-                    <button class="btn-nav" onclick="cancelEdit()" style="flex:1; justify-content:center; background: #666; color: white;">CANCELAR</button>
-                </div>
                 <button id="save-btn" class="btn-nav" onclick="uploadProduct()" style="width:100%; justify-content:center; margin-top:15px;">GUARDAR EN MENÚ</button>
             </div>
 
@@ -269,43 +215,28 @@
             </div>
         </section>
 
+        <!-- SECCIÓN LOGIN -->
         <section id="view-login" class="section">
-            <div class="login-card" style="max-width: 400px; margin: auto; background: white; padding: 30px; border-radius: 20px; text-align: center;">
-                <i class="fas fa-lock" style="font-size: 3rem; margin-bottom: 20px; color: var(--yellow);"></i>
-                <h2 id="login-title">ACCESO RESTRINGIDO</h2>
-                <p id="login-desc" style="margin-bottom: 20px; opacity: 0.8;"></p>
-                <input type="password" id="pass-input" placeholder="••••">
+            <div class="login-card" style="background: white; padding: 40px; border-radius: 30px; max-width: 400px; margin: auto; box-shadow: var(--shadow);">
+                <i class="fas fa-user-circle" style="font-size: 4rem; color: var(--purple); margin-bottom: 20px;"></i>
+                <h2 id="login-title" style="color: var(--purple); margin-bottom: 20px;">ACCESO</h2>
+                <input type="email" id="login-email" placeholder="Correo electrónico">
+                <input type="password" id="login-pass" placeholder="Contraseña">
                 <button class="btn-nav" onclick="attemptLogin()" style="width:100%; justify-content:center; margin-top:20px;">ENTRAR</button>
-                <button onclick="switchView('view-menu')" style="background:none; border:none; color:var(--purple); margin-top:15px; cursor:pointer;">Cancelar</button>
+                <button onclick="switchView('view-menu')" style="background:none; border:none; color:var(--purple); margin-top:15px; cursor:pointer; font-weight: bold;">Regresar al Menú</button>
             </div>
         </section>
     </main>
 
-    <div id="confirmed-modal" class="modal-overlay">
-        <div class="modal-content" style="text-align: center;">
-            <img src="https://cdn-icons-png.flaticon.com/512/3448/3448613.png" style="width: 150px; margin-bottom: 20px;">
-            <h2 style="color: var(--purple);">¡PEDIDO RECIBIDO!</h2>
-            <p style="font-size: 1.2rem; margin: 15px 0;">¡Ya te lo estamos preparando con mucho amor! 🍦</p>
-            <button class="btn-nav" style="margin: auto;" onclick="closeConfirmed()">ESTUPENDO</button>
-        </div>
-    </div>
-
-    <div id="product-modal" class="modal-overlay" onclick="closeModals(event)">
-        <div class="modal-content">
-            <h3 id="modal-prod-name" style="color:var(--purple); font-size:1.8rem;"></h3>
-            <p style="margin:10px 0; font-weight:bold;">Elige tus extras:</p>
-            <div id="contour-container" class="contour-grid"></div>
-            <button class="btn-nav" style="width:100%; justify-content:center; margin-top:20px;" onclick="confirmAddToCart()">AÑADIR AL CARRITO 🍦</button>
-        </div>
-    </div>
-
+    <!-- MODAL CARRITO -->
     <div id="cart-modal" class="modal-overlay" onclick="closeModals(event)">
         <div class="modal-content">
             <h3>🛒 Detalle de tu Pedido</h3>
             <div id="cart-list" style="margin-bottom: 20px;"></div>
             <h4 style="background: #f0f0f0; padding: 15px; border-radius: 15px;">
                 Total: $ <span id="cart-total">0.00</span><br>
-                <small style="color: var(--purple); font-size: 0.85rem;">Total en Bs: <span id="cart-total-bs">0.00</span> (Tasa: <span id="current-tasa-val">...</span>)</small>
+                <small style="color: var(--purple); font-size: 0.9rem;">Total en Bs: <span id="cart-total-bs">0.00</span></small>
+                <br><span style="font-size: 0.7rem; opacity: 0.6;">Tasa Aplicada: <span id="current-tasa-val">...</span> Bs.</span>
             </h4>
             
             <label style="font-weight: bold; display: block; margin-top: 15px;">Método de Pago:</label>
@@ -317,18 +248,33 @@
 
             <div id="payment-info-display" style="display:none; background: #fff3cd; padding: 15px; border-radius: 15px; margin: 10px 0; font-size: 0.9rem; border: 1px solid #ffeeba;">
                 <b>Datos para pagar:</b><br>
-                <span id="display-banco"></span><br>
-                <span id="display-rif"></span><br>
-                <span id="display-phone"></span>
-                <span id="display-acc"></span>
+                <span id="display-banco"></span><br><span id="display-rif"></span><br><span id="display-phone"></span><span id="display-acc"></span>
             </div>
 
             <div id="ref-container" style="display:none;">
                 <input type="text" id="client-ref" placeholder="Número de Referencia">
             </div>
 
-            <input type="text" id="client-name" placeholder="Tu nombre">
+            <input type="text" id="client-name" placeholder="Tu nombre completo">
             <button class="btn-nav" style="width:100%; justify-content:center; margin-top:10px;" onclick="sendOrder()">ENVIAR A COCINA</button>
+        </div>
+    </div>
+
+    <!-- OTROS MODALES -->
+    <div id="product-modal" class="modal-overlay" onclick="closeModals(event)">
+        <div class="modal-content">
+            <h3 id="modal-prod-name" style="color:var(--purple); font-size:1.8rem;"></h3>
+            <p style="margin:10px 0; font-weight:bold;">Elige tus extras:</p>
+            <div id="contour-container" class="contour-grid"></div>
+            <button class="btn-nav" style="width:100%; justify-content:center; margin-top:20px;" onclick="confirmAddToCart()">AÑADIR AL CARRITO 🍦</button>
+        </div>
+    </div>
+
+    <div id="confirmed-modal" class="modal-overlay">
+        <div class="modal-content" style="text-align: center;">
+            <img src="https://cdn-icons-png.flaticon.com/512/3448/3448613.png" style="width: 150px; margin-bottom: 20px;">
+            <h2 style="color: var(--purple);">¡PEDIDO RECIBIDO!</h2>
+            <button class="btn-nav" style="margin: auto;" onclick="closeConfirmed()">ESTUPENDO</button>
         </div>
     </div>
 
@@ -339,14 +285,14 @@
 
     <footer>
         <div class="footer-icons">
-            <a href="https://www.google.com/maps?q=TU_UBICACION" target="_blank" title="Ubicación"><i class="fas fa-map-marker-alt"></i></a>
+            <a href="https://www.google.com/maps?q=TU_DIRECCION" target="_blank" title="Ubicación"><i class="fas fa-map-marker-alt"></i></a>
             <a href="https://www.instagram.com/TU_INSTAGRAM" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
         </div>
         <p class="dev-text">DEVELOPER - ROBERT PARACO</p>
-        <p style="font-size: 0.7rem; opacity: 0.7; margin-top: 10px;">© 2026 Crave Lush. Todos los derechos reservados.</p>
     </footer>
 
     <script>
+        // CONFIGURACIÓN FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyDrNGtxwj0sijnq_vBCTyiRVLO28_D9JG0",
             authDomain: "cravelush-e3277.firebaseapp.com",
@@ -357,6 +303,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+        const auth = firebase.auth();
 
         let cart = [];
         let selectedProduct = null;
@@ -365,19 +312,22 @@
         let editKey = null;
         let tasaBcv = 0;
 
-        async function getTasa() {
-            try {
-                const response = await fetch('https://ve.dolarapi.com/v1/dolares/oficial');
-                if (!response.ok) throw new Error('API falló');
-                const data = await response.json();
-                tasaBcv = parseFloat(data.valor);
-                document.getElementById('current-tasa-val').innerText = tasaBcv.toFixed(2);
-            } catch (e) {
-                db.ref('payment_settings/manualDollar').once('value', snap => {
-                    tasaBcv = parseFloat(snap.val()) || 50; 
-                    document.getElementById('current-tasa-val').innerText = tasaBcv.toFixed(2) + " (Manual)";
-                });
-            }
+        // --- SISTEMA DE TASA PRIORIZADA (MANUAL) ---
+        function getTasa() {
+            db.ref('payment_settings/manualDollar').on('value', snap => {
+                if (snap.exists() && parseFloat(snap.val()) > 0) {
+                    tasaBcv = parseFloat(snap.val());
+                    document.getElementById('current-tasa-val').innerText = tasaBcv.toFixed(2);
+                } else {
+                    // Fallback a API si no hay manual
+                    fetch('https://ve.dolarapi.com/v1/dolares/oficial')
+                        .then(res => res.json())
+                        .then(data => {
+                            tasaBcv = data.promedio;
+                            document.getElementById('current-tasa-val').innerText = tasaBcv.toFixed(2);
+                        });
+                }
+            });
         }
         getTasa();
 
@@ -387,12 +337,25 @@
             document.getElementById(id).classList.add('active');
             document.getElementById('nav-menu').classList.remove('active');
         }
-        function showLogin(role) { targetRole = role; document.getElementById('login-title').innerText = "ACCESO " + role.toUpperCase(); switchView('view-login'); }
-        function attemptLogin() {
-            const pass = document.getElementById('pass-input').value;
-            const keys = { admin: "1234", kitchen: "5555" };
-            if(pass === keys[targetRole]) switchView('view-' + targetRole);
-            else alert("¡Clave incorrecta!");
+
+        // --- LOGIN CON FIREBASE AUTH (EMAIL/PASS) ---
+        function showLogin(role) { 
+            targetRole = role; 
+            document.getElementById('login-title').innerText = "ACCESO " + role.toUpperCase(); 
+            switchView('view-login'); 
+        }
+
+        async function attemptLogin() {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+            if(!email || !pass) return alert("Completa los campos");
+
+            try {
+                await auth.signInWithEmailAndPassword(email, pass);
+                switchView('view-' + targetRole);
+            } catch (error) {
+                alert("Error de autenticación: " + error.message);
+            }
         }
 
         function addContourField(val = "") {
@@ -410,9 +373,7 @@
                 acc: document.getElementById('pay-acc').value,
                 manualDollar: parseFloat(document.getElementById('manual-dollar').value) || 0
             };
-            db.ref('payment_settings').set(data);
-            alert("Guardado.");
-            getTasa();
+            db.ref('payment_settings').set(data).then(() => alert("Configuración actualizada"));
         }
 
         db.ref('payment_settings').on('value', snap => {
@@ -462,7 +423,7 @@
             menuContainer.innerHTML = ""; adminContainer.innerHTML = "";
             snap.forEach(child => {
                 const p = child.val();
-                menuContainer.innerHTML += `<div class="card"><img src="${p.img}" style="width:100%; height:200px; object-fit:cover;"><div style="padding:20px; text-align:center;"><h3>${p.name}</h3><p style="font-weight:700;">$${p.price.toFixed(2)}</p><button class="btn-nav" style="width:100%; justify-content:center;" onclick="openProductDetail('${p.name}', ${p.price}, '${p.contours}')">PEDIR</button></div></div>`;
+                menuContainer.innerHTML += `<div class="card"><img src="${p.img}" style="width:100%; height:200px; object-fit:cover;"><div style="padding:20px; text-align:center;"><h3>${p.name}</h3><p>$${p.price.toFixed(2)}</p><button class="btn-nav" style="width:100%; justify-content:center;" onclick="openProductDetail('${p.name}', ${p.price}, '${p.contours}')">PEDIR</button></div></div>`;
                 adminContainer.innerHTML += `<div class="admin-prod-item"><div><img src="${p.img}">${p.name}</div><div><button onclick='editProduct("${child.key}", ${JSON.stringify(p)})'>E</button><button onclick='deleteProduct("${child.key}")'>X</button></div></div>`;
             });
         });
@@ -525,62 +486,33 @@
             const ref = document.getElementById('client-ref').value;
             if(!name) return alert("Falta nombre");
             const order = { client: name, items: cart.map(i => `${i.name} [${i.contour}]`).join(", "), total: parseFloat(document.getElementById('cart-total').innerText), method, reference: ref || "N/A", time: new Date().toLocaleString() };
-            db.ref('orders').push(order);
-            document.getElementById('cart-modal').style.display = 'none';
-            document.getElementById('confirmed-modal').style.display = 'flex';
-            cart = []; document.getElementById('cart-count').innerText = "0";
+            db.ref('orders').push(order).then(() => {
+                document.getElementById('cart-modal').style.display = 'none';
+                document.getElementById('confirmed-modal').style.display = 'flex';
+                cart = []; document.getElementById('cart-count').innerText = "0";
+            });
         }
 
         function closeConfirmed() { document.getElementById('confirmed-modal').style.display = 'none'; switchView('view-menu'); }
-
-        function resetSales() { if(confirm("¿Reset?")) db.ref('sales_history').remove(); }
-
-        // --- FUNCIONES NUEVAS: WHATSAPP Y EXCEL ---
+        function resetSales() { if(confirm("¿Borrar todas las ventas?")) db.ref('sales_history').remove(); }
 
         function shareSalesWhatsApp() {
             db.ref('sales_history').once('value', snap => {
-                let totalGeneral = 0;
-                let msg = `📊 *REPORTE DE VENTAS - CRAVE LUSH*\n`;
-                msg += `📅 Fecha: ${new Date().toLocaleDateString()}\n\n`;
-                
-                if(!snap.exists()) return alert("No hay ventas para compartir.");
-
-                snap.forEach(child => {
-                    const s = child.val();
-                    totalGeneral += parseFloat(s.total);
-                    msg += `🔹 *${s.client}*\n   Items: ${s.items}\n   Total: $${s.total} (${s.method})\n\n`;
-                });
-
-                msg += `💰 *TOTAL GENERAL: $${totalGeneral.toFixed(2)}*`;
-                const encoded = encodeURIComponent(msg);
-                window.open(`https://wa.me/?text=${encoded}`, '_blank');
+                let msg = "*REPORTE DE VENTAS CRAVE LUSH*\n";
+                snap.forEach(c => { msg += `- ${c.val().client}: $${c.val().total}\n`; });
+                window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
             });
         }
 
         function exportSalesExcel() {
             db.ref('sales_history').once('value', snap => {
-                if(!snap.exists()) return alert("No hay ventas para descargar.");
-
-                // \ufeff es el BOM para que Excel reconozca UTF-8 (acentos y símbolos)
-                let csv = "\ufeff";
-                csv += "FECHA;CLIENTE;PRODUCTOS;METODO;REFERENCIA;TOTAL $\n";
-                
-                snap.forEach(child => {
-                    const s = child.val();
-                    // Limpiamos comas o puntos y comas de los productos para no romper el CSV
-                    let itemsClean = s.items.replace(/;/g, ",");
-                    csv += `"${s.time}";"${s.client}";"${itemsClean}";"${s.method}";"${s.reference}";"${s.total}"\n`;
-                });
-
-                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement("a");
-                
-                link.setAttribute("href", url);
-                link.setAttribute("download", `Ventas_CraveLush_${new Date().toLocaleDateString().replace(/\//g, '-')}.csv`);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                let csv = "Fecha,Cliente,Total\n";
+                snap.forEach(c => { csv += `${c.val().time},${c.val().client},${c.val().total}\n`; });
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'ventas.csv';
+                a.click();
             });
         }
 
@@ -599,7 +531,10 @@
         });
 
         function completeOrder(key) {
-            db.ref('orders/' + key).once('value', snap => { db.ref('sales_history').push(snap.val()); db.ref('orders/' + key).remove(); });
+            db.ref('orders/' + key).once('value', snap => { 
+                db.ref('sales_history').push(snap.val()); 
+                db.ref('orders/' + key).remove(); 
+            });
         }
 
         function closeModals(e) { if(e.target.className === 'modal-overlay') { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); } }
