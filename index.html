@@ -17,315 +17,359 @@
             --purple: #6f2c91;
             --yellow: #ffb800;
             --white: #ffffff;
-            --shadow: 0 10px 30px rgba(0,0,0,0.15);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --shadow: 0 10px 30px rgba(0,0,0,0.2);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Quicksand', sans-serif; }
 
-        body { background: #fdfbff; color: #333; overflow-x: hidden; }
+        /* --- FONDO CON DEGRADADO ANIMADO --- */
+        body { 
+            background: linear-gradient(-45deg, #6f2c91, #ffb800, #4a1a63, #e6a600);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #333; 
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-        /* --- ANIMACIONES PROFESIONALES --- */
-        @keyframes pulse-yellow {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 184, 0, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 184, 0, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 184, 0, 0); }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
+            from { transform: translateY(40px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
 
-        /* --- VIDEO BACKGROUND --- */
-        .video-container {
-            position: relative;
-            height: 60vh;
-            width: 100%;
-            overflow: hidden;
+        /* --- HEADER FIJO --- */
+        header.main-nav {
+            position: fixed;
+            top: 0; width: 100%;
+            background: rgba(111, 44, 145, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 12px 5%;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            text-align: center;
+            z-index: 2000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
 
-        .video-bg {
-            position: absolute;
-            top: 50%; left: 50%;
-            min-width: 100%; min-height: 100%;
-            width: auto; height: auto;
-            transform: translate(-50%, -50%);
-            z-index: -1;
-            filter: brightness(0.5);
-        }
+        .logo h2 { color: var(--yellow); font-size: 1.5rem; letter-spacing: 1px; }
+        .logo span { color: white; }
 
-        .hero-content { color: white; z-index: 1; animation: slideUp 1s ease; }
+        .nav-links { display: flex; gap: 10px; }
 
-        /* --- BOTONES ANIMADOS --- */
-        .btn-nav, .btn-add, .btn-action {
+        /* --- BOTONES --- */
+        .btn-nav {
             background: var(--yellow);
             color: var(--purple);
             border: none;
-            padding: 12px 25px;
+            padding: 10px 18px;
             border-radius: 50px;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .btn-nav:hover { transform: translateY(-3px); background: white; box-shadow: var(--shadow); }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
+        main { margin-top: 80px; width: 100%; }
+
+        .section { 
+            display: none; 
+            padding: 30px 5%; 
+            max-width: 1200px; 
+            margin: auto; 
+            animation: slideUp 0.6s ease forwards;
+        }
+        .section.active { display: block; }
+
+        /* --- HERO VIDEO --- */
+        .hero-video {
+            position: relative;
+            height: 50vh;
+            border-radius: 30px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+        .hero-video video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6); }
+        .hero-text {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center; color: white; width: 90%;
         }
 
-        .btn-nav:hover, .btn-add:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(111, 44, 145, 0.3);
-            background: white;
+        /* --- GRID DE PRODUCTOS --- */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            padding-bottom: 100px;
+        }
+        .card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 25px;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .card:hover { transform: translateY(-10px); box-shadow: var(--shadow); }
+        .card img { width: 100%; height: 220px; object-fit: cover; }
+        .card-body { padding: 20px; text-align: center; }
+        .card-price { color: var(--purple); font-size: 1.4rem; font-weight: 800; margin: 10px 0; }
+
+        /* --- MODALES --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 5000;
+            display: none; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 30px;
+            width: 100%; max-width: 500px; position: relative;
         }
 
-        .btn-add { background: var(--purple); color: white; width: 100%; justify-content: center; }
-
-        /* --- NAVEGACIÓN --- */
-        nav {
-            background: var(--purple);
-            padding: 15px 5%;
-            display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 1000;
+        /* --- ADMIN PANEL --- */
+        .admin-box {
+            background: rgba(255,255,255,0.9);
+            padding: 25px; border-radius: 20px; margin-bottom: 20px;
+        }
+        input, select, textarea {
+            width: 100%; padding: 12px; margin: 8px 0;
+            border: 2px solid #eee; border-radius: 12px; outline: none;
         }
 
-        /* --- SECCIONES --- */
-        .section { display: none; padding: 40px 5%; max-width: 1200px; margin: auto; min-height: 80vh; }
-        .section.active { display: block; animation: slideUp 0.5s ease; }
-
-        /* --- UBICACIÓN --- */
-        .map-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center;
+        /* --- CARRITO FLOTANTE --- */
+        #cart-btn {
+            position: fixed; bottom: 25px; right: 25px;
+            background: var(--yellow); color: var(--purple);
+            width: 65px; height: 65px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 1.5rem; cursor: pointer; z-index: 1500;
+            box-shadow: var(--shadow); animation: pulse 2s infinite;
         }
-        .map-content { background: white; padding: 20px; border-radius: 20px; width: 90%; max-width: 800px; }
-
-        /* --- TABLA DE VENTAS ADMIN --- */
-        .sales-report {
-            background: white; padding: 30px; border-radius: 20px; margin-top: 30px; box-shadow: var(--shadow);
-        }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-        .total-box { font-size: 1.5rem; font-weight: bold; color: var(--purple); text-align: right; padding: 20px; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
         /* --- FOOTER --- */
         footer {
-            background: #222; color: white; text-align: center; padding: 40px; margin-top: 50px;
+            background: rgba(0,0,0,0.8); color: white;
+            text-align: center; padding: 30px; margin-top: 50px;
         }
-        .dev-tag { color: var(--yellow); font-weight: bold; letter-spacing: 2px; }
+        .dev { color: var(--yellow); font-weight: bold; font-size: 1.1rem; }
 
-        /* --- MODAL CARRITO --- */
-        #cart-modal {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: white; padding: 30px; border-radius: 30px; z-index: 6000;
-            width: 90%; max-width: 400px; display: none; box-shadow: 0 0 100px rgba(0,0,0,0.5);
-        }
-
-        /* overlay gracias */
-        #thanks-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--purple); z-index: 7000; display: none;
-            flex-direction: column; justify-content: center; align-items: center; color: white;
-        }
-        #thanks-image { max-width: 80%; border-radius: 20px; }
-
-        /* Float button cart */
-        #cart-float {
-            position: fixed; bottom: 30px; right: 30px;
-            background: var(--yellow); width: 70px; height: 70px;
-            border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            font-size: 1.5rem; cursor: pointer; z-index: 900;
-            animation: pulse-yellow 2s infinite;
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-links span { display: none; }
+            header.main-nav { padding: 10px 3%; }
+            .hero-video { height: 35vh; }
+            .hero-text h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- VIDEO HERO -->
-    <header id="view-home-video" class="video-container">
-        <video autoplay muted loop class="video-bg">
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-hamburguer-close-up-vibe-4015-large.mp4" type="video/mp4">
-        </video>
-        <div class="hero-content">
-            <h1 style="font-size: 4rem;">CRAVE LUSH</h1>
-            <p style="font-size: 1.5rem;">Sabor que Seduce, Placer que Perdura.</p>
-            <br>
-            <button class="btn-nav" onclick="toggleMap()"><i class="fas fa-map-marker-alt"></i> UBICACIÓN</button>
+    <!-- NAVEGACIÓN FIJA -->
+    <header class="main-nav">
+        <div class="logo"><h2>CRAVE <span>LUSH</span></h2></div>
+        <div class="nav-links">
+            <button class="btn-nav" onclick="switchView('view-menu')"><i class="fas fa-utensils"></i> <span>MENÚ</span></button>
+            <button class="btn-nav" onclick="checkAccess('kitchen')"><i class="fas fa-fire"></i> <span>COCINA</span></button>
+            <button class="btn-nav" onclick="checkAccess('admin')"><i class="fas fa-user-shield"></i> <span>ADMIN</span></button>
         </div>
     </header>
 
-    <nav>
-        <h2 style="color:var(--yellow)">CRAVE <span style="color:white">LUSH</span></h2>
-        <div class="nav-links">
-            <button class="btn-nav" onclick="switchView('view-menu')"><i class="fas fa-utensils"></i> MENU</button>
-            <button class="btn-nav" onclick="checkAccess('kitchen')"><i class="fas fa-fire"></i> COCINA</button>
-            <button class="btn-nav" onclick="checkAccess('admin')"><i class="fas fa-user-shield"></i> ADMIN</button>
-        </div>
-    </nav>
-
-    <!-- SECCIÓN MENÚ -->
-    <section id="view-menu" class="section">
-        <h2 style="text-align:center; color:var(--purple); margin-bottom: 30px;">Nuestro Menú Exclusivo</h2>
-        <div id="menu-display" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:30px;"></div>
-    </section>
-
-    <!-- SECCIÓN ADMIN -->
-    <section id="view-admin" class="section">
-        <h2 style="color:var(--purple)">Panel de Control Pro</h2>
-        
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
-            <div class="sales-report">
-                <h4>Cargar Producto</h4>
-                <input type="text" id="adm-name" placeholder="Nombre del plato" style="width:100%; padding:10px; margin:10px 0;">
-                <input type="number" id="adm-price" placeholder="Precio ($)" style="width:100%; padding:10px; margin:10px 0;">
-                <input type="file" id="adm-file" style="margin:10px 0;">
-                <button class="btn-add" onclick="saveProduct()">GUARDAR</button>
+    <main>
+        <!-- SECCIÓN INICIO -->
+        <section id="view-menu" class="section active">
+            <div class="hero-video">
+                <video autoplay muted loop playsinline>
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-hamburguer-close-up-vibe-4015-large.mp4" type="video/mp4">
+                </video>
+                <div class="hero-text">
+                    <h1 style="font-size: 2.5rem;">Sabor que Seduce</h1>
+                    <p>¡Pide ahora y vive la experiencia Lush!</p>
+                    <button class="btn-nav" onclick="openMap()" style="margin: 15px auto;"><i class="fas fa-map-marker-alt"></i> UBICACIÓN</button>
+                </div>
             </div>
+            <h2 style="text-align:center; color:white; margin-bottom:20px; text-shadow: 2px 2px 5px rgba(0,0,0,0.3);">NUESTRAS ESPECIALIDADES</h2>
+            <div id="menu-container" class="menu-grid"></div>
+        </section>
+
+        <!-- SECCIÓN COCINA -->
+        <section id="view-kitchen" class="section">
+            <h2 style="text-align:center; color:white; margin-bottom:20px;">PEDIDOS POR PREPARAR 🔥</h2>
+            <div id="kitchen-orders"></div>
+        </section>
+
+        <!-- SECCIÓN ADMIN -->
+        <section id="view-admin" class="section">
+            <h2 style="text-align:center; color:white; margin-bottom:20px;">PANEL ADMINISTRATIVO</h2>
             
-            <div class="sales-report">
-                <h4>Ajustes</h4>
-                <p>Imagen de Éxito:</p>
-                <input type="file" id="adm-thanks-file" onchange="uploadThanksImg()" style="margin:10px 0;">
-                <button class="btn-add" style="background:red;" onclick="resetSales()">REINICIAR VENTAS DEL DÍA</button>
+            <div class="admin-box">
+                <h4>📍 Configuración de Ubicación</h4>
+                <p style="font-size: 0.8rem; color: #666;">Pega aquí el enlace de "Insertar mapa" de Google Maps:</p>
+                <input type="text" id="map-url-input" placeholder="https://www.google.com/maps/embed?pb=...">
+                <button class="btn-nav" style="width:100%; justify-content:center;" onclick="updateMapUrl()">ACTUALIZAR UBICACIÓN</button>
             </div>
-        </div>
 
-        <div class="sales-report">
-            <h3>REGISTRO DE VENTAS DIARIAS</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Cliente</th>
-                        <th>Pedido</th>
-                        <th>Monto</th>
-                        <th>Hora</th>
-                    </tr>
-                </thead>
-                <tbody id="sales-table-body"></tbody>
-            </table>
-            <div class="total-box">TOTAL VENDIDO: $<span id="daily-total">0.00</span></div>
-            <button class="btn-nav" onclick="window.print()"><i class="fas fa-print"></i> IMPRIMIR REPORTE</button>
-        </div>
-    </section>
-
-    <!-- SECCIÓN COCINA -->
-    <section id="view-kitchen" class="section">
-        <h2 style="text-align:center; color:var(--purple)">PEDIDOS ENTRANTES</h2>
-        <div id="kitchen-display" style="margin-top:20px;"></div>
-    </section>
-
-    <!-- SECCIÓN LOGIN -->
-    <section id="view-login" class="section">
-        <div style="max-width:400px; margin:auto; background:white; padding:40px; border-radius:20px; text-align:center; box-shadow:var(--shadow);">
-            <h3 id="login-title">Acceso</h3>
-            <input type="password" id="login-pass" placeholder="Clave" style="width:100%; padding:15px; margin:20px 0; border-radius:10px; border:1px solid #ddd;">
-            <button class="btn-add" onclick="validateLogin()">ENTRAR</button>
-        </div>
-    </section>
-
-    <!-- MODALES Y OVERLAYS -->
-    <div id="map-modal" class="map-modal">
-        <div class="map-content">
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                <h3>Nuestra Ubicación</h3>
-                <button onclick="toggleMap()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+            <div class="admin-box">
+                <h4>🍔 Cargar Producto</h4>
+                <input type="text" id="prod-name" placeholder="Nombre del Producto">
+                <input type="number" id="prod-price" placeholder="Precio ($)">
+                <input type="file" id="prod-img" accept="image/*">
+                <button class="btn-nav" style="width:100%; justify-content:center; background: var(--purple); color:white;" onclick="uploadProduct()">GUARDAR PRODUCTO</button>
             </div>
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3923.23!2d-66.123!3d10.123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDA3JzM0LjQiTiA2NsKwMDcnMjQuNCJX!5e0!3m2!1ses!2sve!4v1625000000000" width="100%" height="400" style="border:0; border-radius:15px;" allowfullscreen=""></iframe>
+
+            <div class="admin-box">
+                <h3>Ventas de Hoy: $<span id="total-sales">0.00</span></h3>
+                <button class="btn-nav" onclick="resetDay()" style="background:red; color:white; margin-bottom:10px;">REINICIAR DÍA</button>
+                <div id="sales-history" style="max-height: 300px; overflow-y:auto;"></div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN LOGIN -->
+        <section id="view-login" class="section">
+            <div class="modal-content" style="margin:auto; text-align:center;">
+                <h3 id="login-label">ACCESO</h3>
+                <input type="password" id="pass-input" placeholder="Ingresa la clave">
+                <button class="btn-nav" style="width:100%; justify-content:center;" onclick="login()">ENTRAR</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODALES -->
+    <div id="map-modal" class="modal-overlay" onclick="closeModals(event)">
+        <div class="modal-content">
+            <iframe id="google-map-iframe" src="" width="100%" height="400" style="border:0; border-radius:20px;" allowfullscreen="" loading="lazy"></iframe>
         </div>
     </div>
 
-    <div id="cart-modal">
-        <h3>Finalizar Pedido</h3>
-        <input type="text" id="cust-name" placeholder="Tu Nombre Completo" style="width:100%; padding:15px; margin:20px 0; border-radius:10px; border:1px solid #ddd;">
-        <div id="cart-items-list"></div>
-        <p style="font-weight:bold; margin-top:10px;">Total: $<span id="cart-total-modal">0.00</span></p>
-        <div style="display:flex; gap:10px; margin-top:20px;">
-            <button onclick="closeCart()" style="flex:1; padding:10px; border:none; border-radius:10px;">CERRAR</button>
-            <button onclick="confirmPurchase()" class="btn-nav" style="flex:2;">PEDIR AHORA</button>
+    <div id="cart-modal" class="modal-overlay" onclick="closeModals(event)">
+        <div class="modal-content">
+            <h3>Tu Pedido</h3>
+            <div id="cart-list" style="margin: 15px 0;"></div>
+            <hr>
+            <h4 style="margin: 10px 0;">Total: $<span id="cart-total">0.00</span></h4>
+            <input type="text" id="client-name" placeholder="Tu nombre completo">
+            <button class="btn-nav" style="width:100%; justify-content:center;" onclick="sendOrder()">ENVIAR PEDIDO A COCINA</button>
         </div>
     </div>
 
-    <div id="thanks-overlay">
-        <img id="thanks-image" src="https://via.placeholder.com/800x600?text=Gracias+por+Preferir+Crave+Lush" alt="Gracias">
-        <h2 style="margin-top:20px;">¡PEDIDO RECIBIDO!</h2>
-        <p>Estamos preparando tu sabor favorito...</p>
-        <button class="btn-nav" onclick="location.reload()" style="margin-top:20px;">VOLVER AL INICIO</button>
+    <div id="thanks-overlay" class="modal-overlay">
+        <div style="text-align:center; color:white;">
+            <img id="thanks-img" src="" style="max-width:90%; border-radius:20px; box-shadow: var(--shadow);">
+            <h2 style="margin-top:20px;">¡GRACIAS POR TU COMPRA!</h2>
+            <button class="btn-nav" style="margin:20px auto;" onclick="location.reload()">CERRAR</button>
+        </div>
     </div>
 
-    <div id="cart-float" onclick="openCart()">
-        <i class="fas fa-shopping-bag"></i>
-        <span id="cart-count" style="position:absolute; top:0; right:0; background:var(--purple); color:white; border-radius:50%; width:25px; height:25px; font-size:0.8rem; display:flex; justify-content:center; align-items:center;">0</span>
+    <!-- BOTÓN CARRITO -->
+    <div id="cart-btn" onclick="openCart()">
+        <i class="fas fa-shopping-basket"></i>
+        <span id="cart-count" style="position:absolute; top:0; right:0; background:red; color:white; border-radius:50%; width:22px; height:22px; font-size:0.7rem; display:flex; align-items:center; justify-content:center;">0</span>
     </div>
 
     <footer>
-        <p>&copy; 2024 CRAVE LUSH - Todos los derechos reservados</p>
-        <p>Potenciado por: <span class="dev-tag">DEVELOPER ROBERT- PARACO</span></p>
+        <p>© 2024 CRAVE LUSH - Sabor que Seduce</p>
+        <p>Desarrollado por: <span class="dev">DEVELOPER ROBERT- PARACO</span></p>
     </footer>
 
     <script>
-        // --- CONFIGURACIÓN FIREBASE (REEMPLAZA CON TUS DATOS) ---
+        // --- CONFIGURACIÓN FIREBASE (RECUERDA TUS REGLAS .read: true, .write: true) ---
         const firebaseConfig = {
             apiKey: "AIzaSyDrNGtxwj0sijnq_vBCTyiRVLO28_D9JG0",
             authDomain: "cravelush-e3277.firebaseapp.com",
             projectId: "cravelush-e3277",
-            storageBucket: "cravelush-e3277.firebasestorage.app",
-            messagingSenderId: "306682994312",
+            databaseURL: "https://cravelush-e3277-default-rtdb.firebaseio.com",
+            storageBucket: "cravelush-e3277.appspot.com",
             appId: "1:306682994312:web:c7b4e4c7911b2ccaaa493d"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // --- ESTADO LOCAL ---
         let currentRole = "";
         let cart = [];
-        let thanksImg = localStorage.getItem('cl_thanks_img');
+        let thanksImg = "";
 
         // --- NAVEGACIÓN ---
         function switchView(id) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            if(id === 'view-home-video') document.getElementById('view-home-video').style.display = 'flex';
-            else document.getElementById('view-home-video').style.display = 'none';
+            window.scrollTo(0,0);
         }
 
         function checkAccess(role) {
             currentRole = role;
-            document.getElementById('login-title').innerText = "Acceso a " + role.toUpperCase();
+            document.getElementById('login-label').innerText = "ACCESO " + role.toUpperCase();
+            document.getElementById('pass-input').value = "";
             switchView('view-login');
         }
 
-        function validateLogin() {
-            const pass = document.getElementById('login-pass').value;
+        function login() {
+            const pass = document.getElementById('pass-input').value;
             const keys = { admin: "1234", kitchen: "5555" };
             if(pass === keys[currentRole]) switchView('view-' + currentRole);
             else alert("Clave Incorrecta");
         }
 
-        function toggleMap() {
-            const modal = document.getElementById('map-modal');
-            modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+        // --- LÓGICA DE MAPA ---
+        function updateMapUrl() {
+            const url = document.getElementById('map-url-input').value;
+            if(!url.includes('google.com/maps/embed')) return alert("Por favor usa el link de 'Insertar mapa'");
+            db.ref('settings/mapUrl').set(url);
+            alert("Ubicación actualizada");
         }
 
+        db.ref('settings/mapUrl').on('value', snap => {
+            const url = snap.val();
+            if(url) document.getElementById('google-map-iframe').src = url;
+        });
+
+        function openMap() { document.getElementById('map-modal').style.display = 'flex'; }
+
         // --- PRODUCTOS ---
-        function saveProduct() {
-            const name = document.getElementById('adm-name').value;
-            const price = document.getElementById('adm-price').value;
-            const file = document.getElementById('adm-file').files[0];
-            if(!name || !price || !file) return alert("Faltan datos");
+        function uploadProduct() {
+            const name = document.getElementById('prod-name').value;
+            const price = document.getElementById('prod-price').value;
+            const file = document.getElementById('prod-img').files[0];
+            if(!name || !price || !file) return alert("Completa todos los datos");
 
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = (e) => {
                 db.ref('products').push({ name, price: parseFloat(price), img: e.target.result });
-                alert("Producto Guardado");
+                alert("¡Producto Guardado!");
+                document.getElementById('prod-name').value = "";
+                document.getElementById('prod-price').value = "";
             };
             reader.readAsDataURL(file);
         }
+
+        db.ref('products').on('value', snap => {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = "";
+            snap.forEach(child => {
+                const p = child.val();
+                container.innerHTML += `
+                    <div class="card">
+                        <img src="${p.img}">
+                        <div class="card-body">
+                            <h3>${p.name}</h3>
+                            <div class="card-price">$${p.price.toFixed(2)}</div>
+                            <button class="btn-nav" style="width:100%; justify-content:center;" onclick="addToCart('${p.name}', ${p.price})">AÑADIR AL PEDIDO</button>
+                        </div>
+                    </div>
+                `;
+            });
+        });
 
         // --- CARRITO ---
         function addToCart(name, price) {
@@ -334,105 +378,75 @@
         }
 
         function openCart() {
-            if(cart.length === 0) return alert("Carrito vacío");
-            document.getElementById('cart-modal').style.display = 'block';
-            let total = cart.reduce((s, i) => s + i.price, 0);
-            document.getElementById('cart-total-modal').innerText = total.toFixed(2);
+            if(cart.length === 0) return alert("Tu carrito está vacío");
+            const list = document.getElementById('cart-list');
+            list.innerHTML = "";
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price;
+                list.innerHTML += `<div style="display:flex; justify-content:space-between;"><span>${item.name}</span> <span>$${item.price}</span></div>`;
+            });
+            document.getElementById('cart-total').innerText = total.toFixed(2);
+            document.getElementById('cart-modal').style.display = 'flex';
         }
 
-        function closeCart() { document.getElementById('cart-modal').style.display = 'none'; }
-
-        function confirmPurchase() {
-            const name = document.getElementById('cust-name').value;
-            if(!name) return alert("Escribe tu nombre");
+        function sendOrder() {
+            const name = document.getElementById('client-name').value;
+            if(!name) return alert("Escribe tu nombre para el pedido");
             
-            const total = cart.reduce((s, i) => s + i.price, 0);
-            const items = cart.map(i => i.name).join(", ");
-            const time = new Date().toLocaleTimeString();
+            const total = document.getElementById('cart-total').innerText;
+            const order = {
+                client: name,
+                items: cart.map(i => i.name).join(", "),
+                total: total,
+                time: new Date().toLocaleTimeString()
+            };
 
-            const order = { customer: name, items, total, time, status: 'pending' };
-            
-            // Guardar en Firebase (Ventas y Cocina)
             db.ref('orders').push(order);
             db.ref('sales_history').push(order);
-
+            
+            document.getElementById('thanks-img').src = thanksImg || "https://img.freepik.com/vector-premium/letrero-gracias-texto-dibujado-mano-colores-purpura-amarillo_113065-224.jpg";
             document.getElementById('thanks-overlay').style.display = 'flex';
-            if(thanksImg) document.getElementById('thanks-image').src = thanksImg;
         }
 
-        // --- ESCUCHADORES DE FIREBASE (TIEMPO REAL) ---
-        db.ref('products').on('value', snap => {
-            const data = snap.val();
-            const container = document.getElementById('menu-display');
-            container.innerHTML = "";
-            for(let id in data) {
-                container.innerHTML += `
-                    <div style="background:white; border-radius:20px; overflow:hidden; box-shadow:var(--shadow);">
-                        <img src="${data[id].img}" style="width:100%; height:200px; object-fit:cover;">
-                        <div style="padding:20px; text-align:center;">
-                            <h3>${data[id].name}</h3>
-                            <p style="color:var(--purple); font-weight:bold; font-size:1.2rem;">$${data[id].price}</p>
-                            <button class="btn-add" onclick="addToCart('${data[id].name}', ${data[id].price})">AGREGAR</button>
-                        </div>
-                    </div>
-                `;
-            }
-        });
-
+        // --- COCINA Y ADMIN SALES ---
         db.ref('orders').on('value', snap => {
-            const data = snap.val();
-            const container = document.getElementById('kitchen-display');
+            const container = document.getElementById('kitchen-orders');
             container.innerHTML = "";
-            for(let id in data) {
+            snap.forEach(child => {
+                const o = child.val();
                 container.innerHTML += `
-                    <div style="background:white; padding:20px; border-radius:15px; margin-bottom:10px; border-left:8px solid var(--yellow); display:flex; justify-content:space-between; align-items:center;">
+                    <div class="admin-box" style="border-left: 10px solid var(--yellow); display:flex; justify-content:space-between; align-items:center;">
                         <div>
-                            <h4>${data[id].customer}</h4>
-                            <p>${data[id].items}</p>
+                            <h3>${o.client}</h3>
+                            <p>${o.items}</p>
+                            <small>${o.time}</small>
                         </div>
-                        <button class="btn-nav" onclick="db.ref('orders/${id}').remove()">LISTO ✅</button>
+                        <button class="btn-nav" onclick="db.ref('orders/${child.key}').remove()">LISTO ✅</button>
                     </div>
                 `;
-            }
+            });
         });
 
         db.ref('sales_history').on('value', snap => {
-            const data = snap.val();
-            const table = document.getElementById('sales-table-body');
-            let totalDay = 0;
-            table.innerHTML = "";
-            for(let id in data) {
-                totalDay += parseFloat(data[id].total);
-                table.innerHTML += `
-                    <tr>
-                        <td>${data[id].customer}</td>
-                        <td>${data[id].items}</td>
-                        <td>$${data[id].total}</td>
-                        <td>${data[id].time}</td>
-                    </tr>
-                `;
-            }
-            document.getElementById('daily-total').innerText = totalDay.toFixed(2);
+            const list = document.getElementById('sales-history');
+            let total = 0;
+            list.innerHTML = "";
+            snap.forEach(child => {
+                const s = child.val();
+                total += parseFloat(s.total);
+                list.innerHTML += `<p><strong>${s.client}</strong>: $${s.total} (${s.time})</p>`;
+            });
+            document.getElementById('total-sales').innerText = total.toFixed(2);
         });
 
-        function resetSales() {
-            if(confirm("¿Estás seguro de borrar todas las ventas de hoy?")) {
-                db.ref('sales_history').remove();
+        function resetDay() { if(confirm("¿Reiniciar ventas?")) db.ref('sales_history').remove(); }
+
+        function closeModals(e) {
+            if(e.target.classList.contains('modal-overlay')) {
+                document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
             }
         }
-
-        function uploadThanksImg() {
-            const file = document.getElementById('adm-thanks-file').files[0];
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                thanksImg = e.target.result;
-                localStorage.setItem('cl_thanks_img', thanksImg);
-                alert("Imagen de éxito actualizada");
-            };
-            reader.readAsDataURL(file);
-        }
-
-        switchView('view-home-video');
     </script>
 </body>
 </html>
