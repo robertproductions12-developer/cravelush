@@ -76,6 +76,122 @@
         .section.active { display: block; }
         @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
+        /* --- SLIDER FULL WIDTH (ESTILO TV) --- */
+        #view-slider {
+            padding: 0 !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            width: 100%;
+        }
+        .slider-container {
+            position: relative;
+            width: 100vw;
+            height: calc(100vh - 65px); /* Ocupa toda la pantalla menos la barra de navegación */
+            margin-top: 65px;
+            overflow: hidden;
+            background: #000;
+        }
+        .slider-slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Muestra la imagen completa sin recortar en formato 1920x1080 */
+            position: absolute;
+            top: 0; left: 0;
+            background: #000;
+        }
+        .slider-slide.active { display: block; }
+        .slider-controls {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 15px; z-index: 10;
+        }
+        .slider-btn {
+            background: var(--yellow); color: var(--purple);
+            border: none; border-radius: 50px; padding: 12px 25px;
+            font-weight: 700; cursor: pointer; transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 1.1rem;
+        }
+        .slider-btn:hover { background: white; transform: scale(1.05); }
+        .slider-btn.play { background: #28a745; color: white; }
+
+        /* --- JUEGO RELOJ (CRONÓMETRO GIGANTE) --- */
+        .game-container {
+            background: rgba(255,255,255,0.95);
+            padding: 40px 20px;
+            border-radius: 40px;
+            max-width: 900px; /* Más ancho para que luzca el cronómetro */
+            margin: 0 auto;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 6px solid var(--yellow);
+        }
+        .game-timer-display {
+            font-size: 8rem; /* CRONÓMETRO GIGANTE */
+            font-weight: 700;
+            color: var(--purple);
+            margin: 10px 0;
+            text-shadow: 4px 4px 0 var(--yellow), 8px 8px 15px rgba(0,0,0,0.3);
+            line-height: 1;
+            letter-spacing: 5px;
+        }
+        .game-target {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #333;
+            background: #f0f0f0;
+            display: inline-block;
+            padding: 15px 40px;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            border: 3px dashed var(--purple);
+        }
+        .game-bar-bg {
+            width: 100%;
+            height: 50px;
+            background: #ddd;
+            border-radius: 50px;
+            overflow: hidden;
+            position: relative;
+            margin: 30px 0;
+            border: 3px solid var(--purple);
+        }
+        .game-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--yellow), var(--purple));
+            border-radius: 50px;
+            transition: width 0.05s linear;
+        }
+        .game-btn-main {
+            background: var(--yellow);
+            color: var(--purple);
+            border: 6px solid var(--purple);
+            padding: 20px 60px;
+            font-size: 2.2rem;
+            font-weight: 700;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 10px 0 var(--purple), 0 15px 20px rgba(0,0,0,0.3);
+        }
+        .game-btn-main:active { 
+            transform: translateY(8px); 
+            box-shadow: 0 2px 0 var(--purple), 0 5px 10px rgba(0,0,0,0.3); 
+        }
+        .game-btn-main:disabled { opacity: 0.5; cursor: not-allowed; transform: translateY(0); box-shadow: 0 10px 0 var(--purple); }
+        .game-result {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 30px;
+            min-height: 50px;
+        }
+        .win { color: #28a745; text-shadow: 2px 2px 0 #fff; }
+        .lose { color: #dc3545; text-shadow: 2px 2px 0 #fff; }
+
+        /* --- RESTO DE SECCIONES (ORIGINALES) --- */
         .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; justify-items: center; }
         .card { background: white; border-radius: 25px; overflow: hidden; box-shadow: var(--shadow); width: 100%; max-width: 320px; transition: var(--transition); }
         .admin-box { background: rgba(255,255,255,0.95); padding: 25px; border-radius: 25px; margin-bottom: 25px; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.3); }
@@ -122,6 +238,10 @@
             .btn-nav { width: 100%; justify-content: center; padding: 15px; font-size: 1.1rem; }
             .logo h2 { font-size: 1.1rem; }
             .menu-grid { grid-template-columns: 1fr; gap: 20px; }
+            .game-timer-display { font-size: 4.5rem; }
+            .game-btn-main { font-size: 1.5rem; padding: 15px 30px; }
+            .game-target { font-size: 1.2rem; }
+            .slider-container { height: calc(100vh - 60px); margin-top: 60px; }
         }
     </style>
 </head>
@@ -137,6 +257,8 @@
         <div class="burger" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
         <div class="nav-links" id="nav-menu">
             <button class="btn-nav" onclick="switchView('view-menu')"><i class="fas fa-ice-cream"></i> <span>MENÚ</span></button>
+            <button class="btn-nav" onclick="switchView('view-slider')"><i class="fas fa-images"></i> <span>PROMOS</span></button>
+            <button class="btn-nav" onclick="switchView('view-game')"><i class="fas fa-gamepad"></i> <span>JUEGO</span></button>
             <button class="btn-nav" onclick="showLogin('kitchen')"><i class="fas fa-fire"></i> <span>COCINA</span></button>
             <button class="btn-nav" onclick="showLogin('admin')"><i class="fas fa-user-shield"></i> <span>ADMIN</span></button>
         </div>
@@ -146,6 +268,39 @@
         <!-- SECCIÓN MENÚ -->
         <section id="view-menu" class="section active">
             <div id="menu-container" class="menu-grid"></div>
+        </section>
+
+        <!-- SECCIÓN SLIDER (FULL WIDTH) -->
+        <section id="view-slider" class="section">
+            <div class="slider-container" id="slider-container">
+                <!-- Los slides se cargan dinámicamente desde Firebase -->
+                <div class="slider-controls">
+                    <button class="slider-btn play" id="btn-play-slider" onclick="toggleSliderPlay()"><i class="fas fa-play"></i> PLAY</button>
+                    <button class="slider-btn" onclick="changeSlide(-1)"><i class="fas fa-chevron-left"></i></button>
+                    <button class="slider-btn" onclick="changeSlide(1)"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN JUEGO -->
+        <section id="view-game" class="section">
+            <div class="game-container">
+                <h2 style="color: var(--purple); font-size: 2.5rem; margin-bottom: 10px;">🍦 RELOJ HELADO 🍦</h2>
+                <p style="font-weight: 700; color: #666; font-size: 1.2rem;">¡Detén el reloj en el tiempo exacto!</p>
+                
+                <div class="game-target">Meta: <span id="target-time">5.00</span>s</div>
+                <div class="game-timer-display" id="timer-display">0.00s</div>
+                
+                <div class="game-bar-bg">
+                    <div class="game-bar-fill" id="game-bar-fill"></div>
+                </div>
+
+                <button class="game-btn-main" id="game-btn" onclick="handleGameClick()">
+                    <i class="fas fa-ice-cream"></i> <span id="game-btn-text">INICIAR</span>
+                </button>
+
+                <div class="game-result" id="game-result"></div>
+            </div>
         </section>
 
         <!-- SECCIÓN COCINA -->
@@ -191,6 +346,14 @@
                 <button onclick="addContourField()" style="background:none; border:none; color:var(--purple); cursor:pointer; font-weight:bold; margin-bottom:10px;">+ Añadir otro contorno</button>
                 <input type="file" id="prod-img">
                 <button id="save-btn" class="btn-nav" onclick="uploadProduct()" style="width:100%; justify-content:center; margin-top:15px;">GUARDAR EN MENÚ</button>
+            </div>
+
+            <!-- NUEVA SECCIÓN ADMIN: SLIDER -->
+            <div class="admin-box">
+                <h4><i class="fas fa-images"></i> GESTIONAR SLIDER (1920x1080)</h4>
+                <input type="file" id="slider-img" accept="image/*">
+                <button class="btn-nav" onclick="uploadSliderImage()" style="width:100%; justify-content:center; margin-top:10px;">SUBIR IMAGEN AL SLIDER</button>
+                <div id="admin-slider-list" style="margin-top: 15px;"></div>
             </div>
 
             <div class="admin-box">
@@ -312,6 +475,18 @@
         let editKey = null;
         let tasaBcv = 0;
 
+        // --- SLIDER VARIABLES ---
+        let sliderImages = [];
+        let currentSlideIndex = 0;
+        let sliderInterval = null;
+        let isSliderPlaying = false;
+
+        // --- JUEGO VARIABLES ---
+        let gameActive = false;
+        let gameTime = 0;
+        let gameTarget = 0;
+        let gameInterval = null;
+
         // --- SISTEMA DE TASA PRIORIZADA (MANUAL) ---
         function getTasa() {
             db.ref('payment_settings/manualDollar').on('value', snap => {
@@ -319,7 +494,6 @@
                     tasaBcv = parseFloat(snap.val());
                     document.getElementById('current-tasa-val').innerText = tasaBcv.toFixed(2);
                 } else {
-                    // Fallback a API si no hay manual
                     fetch('https://ve.dolarapi.com/v1/dolares/oficial')
                         .then(res => res.json())
                         .then(data => {
@@ -336,6 +510,11 @@
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.getElementById('nav-menu').classList.remove('active');
+            
+            // Detener el slider si se cambia de vista
+            if(id !== 'view-slider' && isSliderPlaying) {
+                toggleSliderPlay();
+            }
         }
 
         // --- LOGIN CON FIREBASE AUTH (EMAIL/PASS) ---
@@ -417,6 +596,165 @@
             else if(editKey) { db.ref('products/' + editKey).update({name, price, contours}); location.reload(); }
         }
 
+        // --- FUNCIONES SLIDER ---
+        function uploadSliderImage() {
+            const fileInput = document.getElementById('slider-img');
+            if(!fileInput.files[0]) return alert("Selecciona una imagen");
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                db.ref('slider').push({ img: e.target.result, time: Date.now() });
+                fileInput.value = "";
+                alert("Imagen subida al Slider");
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+
+        function loadSlider() {
+            db.ref('slider').on('value', snap => {
+                const container = document.getElementById('slider-container');
+                const adminList = document.getElementById('admin-slider-list');
+                
+                // Limpiar solo los slides, manteniendo los controles
+                const controls = container.querySelector('.slider-controls');
+                container.innerHTML = '';
+                container.appendChild(controls);
+                adminList.innerHTML = '';
+
+                sliderImages = [];
+                snap.forEach(child => {
+                    const data = child.val();
+                    sliderImages.push({ key: child.key, ...data });
+                });
+
+                // Ordenar por tiempo (más reciente primero)
+                sliderImages.sort((a,b) => b.time - a.time);
+
+                if(sliderImages.length === 0) {
+                    container.innerHTML += `<div style="display:flex; justify-content:center; align-items:center; height:100%; color:white; font-weight:700; font-size:1.5rem;">No hay imágenes en el Slider</div>`;
+                } else {
+                    sliderImages.forEach((img, index) => {
+                        const imgEl = document.createElement('img');
+                        imgEl.src = img.img;
+                        imgEl.className = 'slider-slide' + (index === 0 ? ' active' : '');
+                        container.appendChild(imgEl);
+
+                        adminList.innerHTML += `
+                            <div class="admin-prod-item">
+                                <img src="${img.img}" style="width:100px; height:56px; object-fit:cover;">
+                                <button onclick="deleteSliderImage('${img.key}')" style="background:#dc3545; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">X</button>
+                            </div>
+                        `;
+                    });
+                }
+                currentSlideIndex = 0;
+                updateSliderView();
+            });
+        }
+        loadSlider();
+
+        function deleteSliderImage(key) {
+            if(confirm("¿Eliminar esta imagen del slider?")) {
+                db.ref('slider/' + key).remove();
+            }
+        }
+
+        function updateSliderView() {
+            const slides = document.querySelectorAll('.slider-slide');
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === currentSlideIndex);
+            });
+        }
+
+        function changeSlide(direction) {
+            if(sliderImages.length === 0) return;
+            currentSlideIndex += direction;
+            if(currentSlideIndex >= sliderImages.length) currentSlideIndex = 0;
+            if(currentSlideIndex < 0) currentSlideIndex = sliderImages.length - 1;
+            updateSliderView();
+        }
+
+        function toggleSliderPlay() {
+            const btn = document.getElementById('btn-play-slider');
+            if(isSliderPlaying) {
+                clearInterval(sliderInterval);
+                isSliderPlaying = false;
+                btn.innerHTML = '<i class="fas fa-play"></i> PLAY';
+                btn.classList.remove('play');
+            } else {
+                if(sliderImages.length === 0) return alert("No hay imágenes para reproducir");
+                isSliderPlaying = true;
+                btn.innerHTML = '<i class="fas fa-pause"></i> PAUSA';
+                btn.classList.add('play');
+                sliderInterval = setInterval(() => {
+                    changeSlide(1);
+                }, 3000); // Cambia cada 3 segundos
+            }
+        }
+
+        // --- FUNCIONES JUEGO RELOJ ---
+        function startGame() {
+            gameActive = true;
+            gameTime = 0;
+            // Generar meta aleatoria entre 2.00 y 8.00 segundos
+            gameTarget = (Math.random() * 6 + 2).toFixed(2);
+            document.getElementById('target-time').innerText = gameTarget;
+            document.getElementById('timer-display').innerText = '0.00s';
+            document.getElementById('game-bar-fill').style.width = '0%';
+            document.getElementById('game-result').innerText = '';
+            document.getElementById('game-btn-text').innerText = '¡FRENAR!';
+            document.getElementById('game-btn').disabled = false;
+
+            // Animación del temporizador
+            gameInterval = setInterval(() => {
+                if(!gameActive) return;
+                gameTime += 0.05;
+                document.getElementById('timer-display').innerText = gameTime.toFixed(2) + 's';
+                // La barra llega a 100% a los 10 segundos
+                const percentage = Math.min((gameTime / 10) * 100, 100);
+                document.getElementById('game-bar-fill').style.width = percentage + '%';
+                
+                if(gameTime >= 10) {
+                    stopGame(false);
+                }
+            }, 50);
+        }
+
+        function stopGame(manual = true) {
+            if(!gameActive) return;
+            gameActive = false;
+            clearInterval(gameInterval);
+            document.getElementById('game-btn-text').innerText = 'REINTENTAR';
+            document.getElementById('game-btn').disabled = false;
+
+            const resultEl = document.getElementById('game-result');
+            if(manual) {
+                const diff = Math.abs(gameTime - parseFloat(gameTarget));
+                if(diff <= 0.20) {
+                    resultEl.innerHTML = '🎉 ¡PERFECTO! ¡GANASTE UN HELADO! 🍦';
+                    resultEl.className = 'game-result win';
+                } else if(diff <= 0.50) {
+                    resultEl.innerHTML = '😅 ¡CASI! Muy cerca, inténtalo de nuevo.';
+                    resultEl.className = 'game-result lose';
+                } else {
+                    resultEl.innerHTML = `❌ ¡Fallaste! La meta era ${gameTarget}s y te detuviste en ${gameTime.toFixed(2)}s`;
+                    resultEl.className = 'game-result lose';
+                }
+            } else {
+                resultEl.innerHTML = '⏰ ¡Tiempo agotado! Inténtalo de nuevo.';
+                resultEl.className = 'game-result lose';
+            }
+        }
+
+        function handleGameClick() {
+            const btn = document.getElementById('game-btn');
+            if(!gameActive) {
+                startGame();
+            } else {
+                stopGame(true);
+            }
+        }
+
+        // --- FUNCIONES DEL MENÚ Y PRODUCTOS (ORIGINALES) ---
         db.ref('products').on('value', snap => {
             const menuContainer = document.getElementById('menu-container');
             const adminContainer = document.getElementById('admin-product-list');
