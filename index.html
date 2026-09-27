@@ -77,38 +77,20 @@
         @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         /* --- SLIDER FULL WIDTH (ESTILO TV) --- */
-        #view-slider {
-            padding: 0 !important;
-            max-width: 100% !important;
-            margin: 0 !important;
-            width: 100%;
-        }
+        #view-slider { padding: 0 !important; max-width: 100% !important; margin: 0 !important; width: 100%; }
         .slider-container {
-            position: relative;
-            width: 100vw;
-            height: calc(100vh - 65px); /* Ocupa toda la pantalla menos la barra de navegación */
-            margin-top: 65px;
-            overflow: hidden;
-            background: #000;
+            position: relative; width: 100vw; height: calc(100vh - 65px);
+            margin-top: 65px; overflow: hidden; background: #000;
         }
         .slider-slide {
-            display: none;
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Muestra la imagen completa sin recortar en formato 1920x1080 */
-            position: absolute;
-            top: 0; left: 0;
-            background: #000;
+            display: none; width: 100%; height: 100%; object-fit: contain;
+            position: absolute; top: 0; left: 0; background: #000;
         }
         .slider-slide.active { display: block; }
-        .slider-controls {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 15px; z-index: 10;
-        }
+        .slider-controls { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 15px; z-index: 10; }
         .slider-btn {
-            background: var(--yellow); color: var(--purple);
-            border: none; border-radius: 50px; padding: 12px 25px;
-            font-weight: 700; cursor: pointer; transition: var(--transition);
+            background: var(--yellow); color: var(--purple); border: none; border-radius: 50px;
+            padding: 12px 25px; font-weight: 700; cursor: pointer; transition: var(--transition);
             box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 1.1rem;
         }
         .slider-btn:hover { background: white; transform: scale(1.05); }
@@ -116,80 +98,153 @@
 
         /* --- JUEGO RELOJ (CRONÓMETRO GIGANTE) --- */
         .game-container {
-            background: rgba(255,255,255,0.95);
-            padding: 40px 20px;
-            border-radius: 40px;
-            max-width: 900px; /* Más ancho para que luzca el cronómetro */
-            margin: 0 auto;
-            text-align: center;
-            box-shadow: var(--shadow);
-            border: 6px solid var(--yellow);
+            background: rgba(255,255,255,0.95); padding: 40px 20px; border-radius: 40px;
+            max-width: 900px; margin: 0 auto; text-align: center;
+            box-shadow: var(--shadow); border: 6px solid var(--yellow);
         }
         .game-timer-display {
-            font-size: 8rem; /* CRONÓMETRO GIGANTE */
-            font-weight: 700;
-            color: var(--purple);
-            margin: 10px 0;
+            font-size: 8rem; font-weight: 700; color: var(--purple); margin: 10px 0;
             text-shadow: 4px 4px 0 var(--yellow), 8px 8px 15px rgba(0,0,0,0.3);
-            line-height: 1;
-            letter-spacing: 5px;
+            line-height: 1; letter-spacing: 5px;
+            font-variant-numeric: tabular-nums;
         }
         .game-target {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #333;
-            background: #f0f0f0;
-            display: inline-block;
-            padding: 15px 40px;
-            border-radius: 50px;
-            margin-bottom: 20px;
-            border: 3px dashed var(--purple);
+            font-size: 1.8rem; font-weight: 700; color: #333; background: #f0f0f0;
+            display: inline-block; padding: 15px 40px; border-radius: 50px;
+            margin-bottom: 20px; border: 3px dashed var(--purple);
         }
         .game-bar-bg {
-            width: 100%;
-            height: 50px;
-            background: #ddd;
-            border-radius: 50px;
-            overflow: hidden;
-            position: relative;
-            margin: 30px 0;
-            border: 3px solid var(--purple);
+            width: 100%; height: 50px; background: #ddd; border-radius: 50px;
+            overflow: hidden; position: relative; margin: 30px 0; border: 3px solid var(--purple);
         }
         .game-bar-fill {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, var(--yellow), var(--purple));
-            border-radius: 50px;
-            transition: width 0.05s linear;
+            width: 0%; height: 100%; background: linear-gradient(90deg, var(--yellow), var(--purple));
+            border-radius: 50px; transition: width 0.01s linear;
         }
         .game-btn-main {
-            background: var(--yellow);
-            color: var(--purple);
-            border: 6px solid var(--purple);
-            padding: 20px 60px;
-            font-size: 2.2rem;
-            font-weight: 700;
-            border-radius: 60px;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 20px;
-            box-shadow: 0 10px 0 var(--purple), 0 15px 20px rgba(0,0,0,0.3);
+            background: var(--yellow); color: var(--purple); border: 6px solid var(--purple);
+            padding: 20px 60px; font-size: 2.2rem; font-weight: 700; border-radius: 60px;
+            cursor: pointer; transition: var(--transition); display: inline-flex;
+            align-items: center; gap: 20px; box-shadow: 0 10px 0 var(--purple), 0 15px 20px rgba(0,0,0,0.3);
         }
-        .game-btn-main:active { 
-            transform: translateY(8px); 
-            box-shadow: 0 2px 0 var(--purple), 0 5px 10px rgba(0,0,0,0.3); 
-        }
+        .game-btn-main:active { transform: translateY(8px); box-shadow: 0 2px 0 var(--purple), 0 5px 10px rgba(0,0,0,0.3); }
         .game-btn-main:disabled { opacity: 0.5; cursor: not-allowed; transform: translateY(0); box-shadow: 0 10px 0 var(--purple); }
-        .game-result {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-top: 30px;
-            min-height: 50px;
-        }
+        .game-result { font-size: 2rem; font-weight: 700; margin-top: 30px; min-height: 50px; }
         .win { color: #28a745; text-shadow: 2px 2px 0 #fff; }
         .lose { color: #dc3545; text-shadow: 2px 2px 0 #fff; }
+        
+        .btn-retry {
+            display: none;
+            background: #28a745; color: white; border: 4px solid #1e7e34;
+            padding: 15px 40px; font-size: 1.5rem; font-weight: 700; border-radius: 50px;
+            cursor: pointer; margin-top: 20px; box-shadow: 0 6px 0 #1e7e34;
+            transition: var(--transition);
+        }
+        .btn-retry:active { transform: translateY(4px); box-shadow: 0 2px 0 #1e7e34; }
+        .btn-retry.show { display: inline-flex; align-items: center; gap: 10px; }
+
+        /* --- SELECTOR DE JUEGOS --- */
+        .game-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        .game-tab {
+            background: rgba(255,255,255,0.8);
+            color: var(--purple);
+            border: 3px solid var(--purple);
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .game-tab.active {
+            background: var(--yellow);
+            color: var(--purple);
+            border-color: var(--purple);
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .game-panel { display: none; }
+        .game-panel.active { display: block; }
+
+        /* --- NUEVO JUEGO ESTILO MARIO BROS --- */
+        .mario-game-container {
+            background: #4a1a63;
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            height: 600px;
+            margin: 0 auto;
+            border: 6px solid var(--yellow);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+        }
+        .mario-game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(111, 44, 145, 0.9);
+            color: white;
+            border-bottom: 3px solid var(--yellow);
+            z-index: 10;
+        }
+        .mario-game-header span { font-weight: 700; font-size: 1.2rem; }
+        .mario-game-header .score { color: var(--yellow); }
+        .mario-game-header .record { color: #ffca2c; }
+        
+        .mario-game-world {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, #6f2c91 0%, #9b4dca 100%);
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255,255,255,0.3) 10%, transparent 10.5%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.2) 15%, transparent 15.5%),
+                radial-gradient(circle at 50% 60%, rgba(255,255,255,0.1) 8%, transparent 8.5%);
+        }
+        #mario-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .mario-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            color: white;
+            text-align: center;
+        }
+        .mario-overlay.show { display: flex; }
+        .mario-overlay h2 { font-size: 3rem; color: var(--yellow); text-shadow: 3px 3px 0 #000; margin-bottom: 20px; }
+        .mario-overlay p { font-size: 1.5rem; margin-bottom: 30px; }
+        .mario-overlay .btn-restart {
+            background: var(--yellow); color: var(--purple);
+            border: 5px solid var(--purple);
+            padding: 20px 50px; font-size: 2rem; font-weight: 700;
+            border-radius: 60px; cursor: pointer;
+            box-shadow: 0 10px 0 var(--purple), 0 15px 20px rgba(0,0,0,0.5);
+            transition: var(--transition);
+            display: flex; align-items: center; gap: 15px;
+        }
+        .mario-overlay .btn-restart:active { transform: translateY(8px); box-shadow: 0 2px 0 var(--purple); }
 
         /* --- RESTO DE SECCIONES (ORIGINALES) --- */
         .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; justify-items: center; }
@@ -238,10 +293,14 @@
             .btn-nav { width: 100%; justify-content: center; padding: 15px; font-size: 1.1rem; }
             .logo h2 { font-size: 1.1rem; }
             .menu-grid { grid-template-columns: 1fr; gap: 20px; }
-            .game-timer-display { font-size: 4.5rem; }
+            .game-timer-display { font-size: 5rem; }
             .game-btn-main { font-size: 1.5rem; padding: 15px 30px; }
             .game-target { font-size: 1.2rem; }
             .slider-container { height: calc(100vh - 60px); margin-top: 60px; }
+            .mario-game-container { height: 450px; }
+            .game-tab { padding: 8px 15px; font-size: 0.9rem; }
+            .mario-overlay h2 { font-size: 2rem; }
+            .mario-overlay .btn-restart { font-size: 1.3rem; padding: 15px 30px; }
         }
     </style>
 </head>
@@ -258,7 +317,7 @@
         <div class="nav-links" id="nav-menu">
             <button class="btn-nav" onclick="switchView('view-menu')"><i class="fas fa-ice-cream"></i> <span>MENÚ</span></button>
             <button class="btn-nav" onclick="switchView('view-slider')"><i class="fas fa-images"></i> <span>PROMOS</span></button>
-            <button class="btn-nav" onclick="switchView('view-game')"><i class="fas fa-gamepad"></i> <span>JUEGO</span></button>
+            <button class="btn-nav" onclick="switchView('view-game')"><i class="fas fa-gamepad"></i> <span>DESAFÍO</span></button>
             <button class="btn-nav" onclick="showLogin('kitchen')"><i class="fas fa-fire"></i> <span>COCINA</span></button>
             <button class="btn-nav" onclick="showLogin('admin')"><i class="fas fa-user-shield"></i> <span>ADMIN</span></button>
         </div>
@@ -273,7 +332,6 @@
         <!-- SECCIÓN SLIDER (FULL WIDTH) -->
         <section id="view-slider" class="section">
             <div class="slider-container" id="slider-container">
-                <!-- Los slides se cargan dinámicamente desde Firebase -->
                 <div class="slider-controls">
                     <button class="slider-btn play" id="btn-play-slider" onclick="toggleSliderPlay()"><i class="fas fa-play"></i> PLAY</button>
                     <button class="slider-btn" onclick="changeSlide(-1)"><i class="fas fa-chevron-left"></i></button>
@@ -282,24 +340,60 @@
             </div>
         </section>
 
-        <!-- SECCIÓN JUEGO -->
+        <!-- SECCIÓN DESAFÍO (DOS JUEGOS) -->
         <section id="view-game" class="section">
-            <div class="game-container">
-                <h2 style="color: var(--purple); font-size: 2.5rem; margin-bottom: 10px;">🍦 RELOJ HELADO 🍦</h2>
-                <p style="font-weight: 700; color: #666; font-size: 1.2rem;">¡Detén el reloj en el tiempo exacto!</p>
-                
-                <div class="game-target">Meta: <span id="target-time">5.00</span>s</div>
-                <div class="game-timer-display" id="timer-display">0.00s</div>
-                
-                <div class="game-bar-bg">
-                    <div class="game-bar-fill" id="game-bar-fill"></div>
+            <!-- Selector de Juegos -->
+            <div class="game-selector">
+                <button class="game-tab active" id="tab-reloj" onclick="switchGame('reloj')"><i class="fas fa-clock"></i> Reloj Helado</button>
+                <button class="game-tab" id="tab-mario" onclick="switchGame('mario')"><i class="fas fa-gamepad"></i> Desafío Cubo</button>
+            </div>
+
+            <!-- Panel Juego Reloj -->
+            <div id="panel-reloj" class="game-panel active">
+                <div class="game-container">
+                    <h2 style="color: var(--purple); font-size: 2.5rem; margin-bottom: 10px;">🍦 RELOJ HELADO 🍦</h2>
+                    <p style="font-weight: 700; color: #666; font-size: 1.2rem;">¡Detén el reloj en el tiempo exacto!</p>
+                    
+                    <div class="game-target">Meta: <span id="target-time">5.00</span>s</div>
+                    <div class="game-timer-display" id="timer-display">0.00s</div>
+                    
+                    <div class="game-bar-bg">
+                        <div class="game-bar-fill" id="game-bar-fill"></div>
+                    </div>
+
+                    <button class="game-btn-main" id="game-btn" onclick="handleGameClick()">
+                        <i class="fas fa-ice-cream"></i> <span id="game-btn-text">INICIAR</span>
+                    </button>
+
+                    <div class="game-result" id="game-result"></div>
+                    
+                    <button class="btn-retry" id="btn-retry-reloj" onclick="resetRelojGame()">
+                        <i class="fas fa-redo"></i> INTENTAR DE NUEVO
+                    </button>
                 </div>
+            </div>
 
-                <button class="game-btn-main" id="game-btn" onclick="handleGameClick()">
-                    <i class="fas fa-ice-cream"></i> <span id="game-btn-text">INICIAR</span>
-                </button>
-
-                <div class="game-result" id="game-result"></div>
+            <!-- Panel Juego Mario -->
+            <div id="panel-mario" class="game-panel">
+                <div class="mario-game-container" id="mario-game-wrapper">
+                    <div class="mario-game-header">
+                        <span>🍔 COMIDA: <span class="score" id="mario-score">0</span></span>
+                        <span>🏆 RÉCORD: <span class="record" id="mario-record">0</span></span>
+                    </div>
+                    <div class="mario-game-world">
+                        <canvas id="mario-canvas"></canvas>
+                        <div class="mario-overlay" id="mario-overlay">
+                            <h2>💥 ¡HAS PERDIDO! 💥</h2>
+                            <p>Puntaje: <span id="mario-final-score">0</span> | Récord: <span id="mario-final-record">0</span></p>
+                            <button class="btn-restart" onclick="restartMarioGame()">
+                                <i class="fas fa-redo"></i> REINICIAR JUEGO
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 15px; color: #333; font-weight: 700;">
+                    <p>Usa las <b>Flechas</b> o <b>Desliza</b> para moverte. ¡Recoge la comida y esquiva las X rojas!</p>
+                </div>
             </div>
         </section>
 
@@ -348,7 +442,6 @@
                 <button id="save-btn" class="btn-nav" onclick="uploadProduct()" style="width:100%; justify-content:center; margin-top:15px;">GUARDAR EN MENÚ</button>
             </div>
 
-            <!-- NUEVA SECCIÓN ADMIN: SLIDER -->
             <div class="admin-box">
                 <h4><i class="fas fa-images"></i> GESTIONAR SLIDER (1920x1080)</h4>
                 <input type="file" id="slider-img" accept="image/*">
@@ -481,11 +574,29 @@
         let sliderInterval = null;
         let isSliderPlaying = false;
 
-        // --- JUEGO VARIABLES ---
+        // --- JUEGO RELOJ VARIABLES ---
         let gameActive = false;
         let gameTime = 0;
         let gameTarget = 0;
         let gameInterval = null;
+
+        // --- JUEGO MARIO VARIABLES ---
+        const canvas = document.getElementById('mario-canvas');
+        const ctx = canvas.getContext('2d');
+        let marioGameActive = false;
+        let marioScore = 0;
+        let marioRecord = 0;
+        let marioItems = [];
+        const MARIO_ORIGINAL_WIDTH = 50;
+        const MARIO_ORIGINAL_HEIGHT = 50;
+        let marioPlayer = { x: 0, y: 0, width: MARIO_ORIGINAL_WIDTH, height: MARIO_ORIGINAL_HEIGHT, speed: 5 };
+        let marioAnimationId = null;
+        let marioLastSpawn = 0;
+        let marioSpawnRate = 600;
+        let marioKeys = { left: false, right: false };
+        let marioTouchX = null;
+        let audioCtx = null;
+        let musicInterval = null;
 
         // --- SISTEMA DE TASA PRIORIZADA (MANUAL) ---
         function getTasa() {
@@ -506,14 +617,43 @@
         getTasa();
 
         function toggleMenu() { document.getElementById('nav-menu').classList.toggle('active'); }
+        
         function switchView(id) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.getElementById('nav-menu').classList.remove('active');
             
-            // Detener el slider si se cambia de vista
-            if(id !== 'view-slider' && isSliderPlaying) {
-                toggleSliderPlay();
+            if(id !== 'view-slider' && isSliderPlaying) { toggleSliderPlay(); }
+
+            if(id !== 'view-game') {
+                stopMarioGame();
+                clearInterval(gameInterval);
+                gameActive = false;
+                document.getElementById('game-btn-text').innerText = 'INICIAR';
+                document.getElementById('game-btn').disabled = false;
+                document.getElementById('btn-retry-reloj').classList.remove('show');
+            }
+        }
+
+        // --- SELECTOR DE JUEGOS ---
+        function switchGame(game) {
+            document.querySelectorAll('.game-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active'));
+            
+            if(game === 'reloj') {
+                document.getElementById('tab-reloj').classList.add('active');
+                document.getElementById('panel-reloj').classList.add('active');
+                stopMarioGame();
+                resetRelojGame();
+            } else {
+                document.getElementById('tab-mario').classList.add('active');
+                document.getElementById('panel-mario').classList.add('active');
+                clearInterval(gameInterval);
+                gameActive = false;
+                document.getElementById('game-btn-text').innerText = 'INICIAR';
+                document.getElementById('game-btn').disabled = false;
+                document.getElementById('btn-retry-reloj').classList.remove('show');
+                restartMarioGame();
             }
         }
 
@@ -614,7 +754,6 @@
                 const container = document.getElementById('slider-container');
                 const adminList = document.getElementById('admin-slider-list');
                 
-                // Limpiar solo los slides, manteniendo los controles
                 const controls = container.querySelector('.slider-controls');
                 container.innerHTML = '';
                 container.appendChild(controls);
@@ -626,7 +765,6 @@
                     sliderImages.push({ key: child.key, ...data });
                 });
 
-                // Ordenar por tiempo (más reciente primero)
                 sliderImages.sort((a,b) => b.time - a.time);
 
                 if(sliderImages.length === 0) {
@@ -687,71 +825,399 @@
                 btn.classList.add('play');
                 sliderInterval = setInterval(() => {
                     changeSlide(1);
-                }, 3000); // Cambia cada 3 segundos
+                }, 3000);
             }
         }
 
-        // --- FUNCIONES JUEGO RELOJ ---
-        function startGame() {
-            gameActive = true;
+        // ==========================================
+        //  JUEGO RELOJ (SEGUNDOS Y CENTÉSIMAS)
+        // ==========================================
+        
+        // Función para generar una meta aleatoria con 2 decimales (centésimas)
+        function generateTarget() {
+            // Entre 2.00 y 8.00
+            return (Math.random() * 6 + 2).toFixed(2);
+        }
+
+        function resetRelojGame() {
+            gameActive = false;
+            clearInterval(gameInterval);
             gameTime = 0;
-            // Generar meta aleatoria entre 2.00 y 8.00 segundos
-            gameTarget = (Math.random() * 6 + 2).toFixed(2);
+            gameTarget = generateTarget();
+            
+            // Mostrar la meta con 2 decimales
             document.getElementById('target-time').innerText = gameTarget;
             document.getElementById('timer-display').innerText = '0.00s';
             document.getElementById('game-bar-fill').style.width = '0%';
             document.getElementById('game-result').innerText = '';
+            document.getElementById('game-result').className = 'game-result';
+            document.getElementById('game-btn-text').innerText = 'INICIAR';
+            document.getElementById('game-btn').disabled = false;
+            document.getElementById('btn-retry-reloj').classList.remove('show');
+        }
+
+        function startGame() {
+            gameActive = true;
+            gameTime = 0;
+            
+            document.getElementById('timer-display').innerText = '0.00s';
+            document.getElementById('game-bar-fill').style.width = '0%';
+            document.getElementById('game-result').innerText = '';
+            document.getElementById('game-result').className = 'game-result';
             document.getElementById('game-btn-text').innerText = '¡FRENAR!';
             document.getElementById('game-btn').disabled = false;
+            document.getElementById('btn-retry-reloj').classList.remove('show');
 
-            // Animación del temporizador
             gameInterval = setInterval(() => {
                 if(!gameActive) return;
-                gameTime += 0.05;
+                // Incrementar en 0.01 (una centésima) para que se vea natural
+                gameTime += 0.01;
                 document.getElementById('timer-display').innerText = gameTime.toFixed(2) + 's';
-                // La barra llega a 100% a los 10 segundos
                 const percentage = Math.min((gameTime / 10) * 100, 100);
                 document.getElementById('game-bar-fill').style.width = percentage + '%';
                 
                 if(gameTime >= 10) {
                     stopGame(false);
                 }
-            }, 50);
+            }, 10);
         }
 
         function stopGame(manual = true) {
             if(!gameActive) return;
             gameActive = false;
             clearInterval(gameInterval);
-            document.getElementById('game-btn-text').innerText = 'REINTENTAR';
-            document.getElementById('game-btn').disabled = false;
-
+            
             const resultEl = document.getElementById('game-result');
+            const retryBtn = document.getElementById('btn-retry-reloj');
+            
             if(manual) {
-                const diff = Math.abs(gameTime - parseFloat(gameTarget));
-                if(diff <= 0.20) {
-                    resultEl.innerHTML = '🎉 ¡PERFECTO! ¡GANASTE UN HELADO! 🍦';
+                // Comparar los strings con 2 decimales EXACTAMENTE
+                const targetStr = parseFloat(gameTarget).toFixed(2); // "5.12"
+                const playerStr = gameTime.toFixed(2);               // "5.12"
+                
+                if(targetStr === playerStr) {
+                    // ¡GANASTE! Coincidencia exacta
+                    resultEl.innerHTML = `🎉 ¡PERFECTO! ¡GANASTE UN HELADO! 🍦<br><small style="font-size:1rem;">Meta: ${gameTarget}s | Tú: ${gameTime.toFixed(2)}s</small>`;
                     resultEl.className = 'game-result win';
-                } else if(diff <= 0.50) {
-                    resultEl.innerHTML = '😅 ¡CASI! Muy cerca, inténtalo de nuevo.';
-                    resultEl.className = 'game-result lose';
                 } else {
-                    resultEl.innerHTML = `❌ ¡Fallaste! La meta era ${gameTarget}s y te detuviste en ${gameTime.toFixed(2)}s`;
+                    // Perdiste
+                    const diff = Math.abs(gameTime - parseFloat(gameTarget)).toFixed(2);
+                    resultEl.innerHTML = `❌ ¡Fallaste! Meta: ${gameTarget}s | Tú: ${gameTime.toFixed(2)}s<br><small style="font-size:1rem;">Diferencia: ${diff}s</small>`;
                     resultEl.className = 'game-result lose';
                 }
             } else {
                 resultEl.innerHTML = '⏰ ¡Tiempo agotado! Inténtalo de nuevo.';
                 resultEl.className = 'game-result lose';
             }
+            
+            // Mostrar botón de reintentar
+            document.getElementById('game-btn-text').innerText = 'INICIAR';
+            document.getElementById('game-btn').disabled = true;
+            retryBtn.classList.add('show');
         }
 
         function handleGameClick() {
-            const btn = document.getElementById('game-btn');
             if(!gameActive) {
+                if(gameTarget === 0) {
+                    gameTarget = generateTarget();
+                    document.getElementById('target-time').innerText = gameTarget;
+                }
                 startGame();
             } else {
                 stopGame(true);
             }
+        }
+
+        // ==========================================
+        //  JUEGO ESTILO MARIO BROS (DESAFÍO CUBO)
+        // ==========================================
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playEatSound() {
+            if(!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        function playDeathSound() {
+            if(!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.4);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.4);
+        }
+
+        function playMusic() {
+            if(!audioCtx) return;
+            if(musicInterval) clearInterval(musicInterval);
+            const notes = [523.25, 587.33, 659.25, 523.25, 659.25, 587.33, 523.25, 392.00];
+            let i = 0;
+            musicInterval = setInterval(() => {
+                if(!marioGameActive) { clearInterval(musicInterval); musicInterval = null; return; }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(notes[i % notes.length], audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+                i++;
+            }, 300);
+        }
+
+        function initMarioGame() {
+            if(marioGameActive) return;
+            initAudio();
+            
+            db.ref('mario_record').once('value', snap => {
+                marioRecord = snap.val() || 0;
+                document.getElementById('mario-record').innerText = marioRecord;
+            });
+
+            marioScore = 0;
+            document.getElementById('mario-score').innerText = '0';
+            
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            
+            // Reiniciar tamaño del jugador a original
+            marioPlayer.width = MARIO_ORIGINAL_WIDTH;
+            marioPlayer.height = MARIO_ORIGINAL_HEIGHT;
+            marioPlayer.x = canvas.width / 2 - marioPlayer.width / 2;
+            marioPlayer.y = canvas.height - marioPlayer.height - 10;
+            
+            marioItems = [];
+            marioLastSpawn = Date.now();
+            marioSpawnRate = 600;
+            marioGameActive = true;
+            document.getElementById('mario-overlay').classList.remove('show');
+
+            document.addEventListener('keydown', (e) => {
+                if(e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') marioKeys.left = true;
+                if(e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') marioKeys.right = true;
+            });
+            document.addEventListener('keyup', (e) => {
+                if(e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') marioKeys.left = false;
+                if(e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') marioKeys.right = false;
+            });
+
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const rect = canvas.getBoundingClientRect();
+                marioTouchX = e.touches[0].clientX - rect.left;
+            }, {passive: false});
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                const rect = canvas.getBoundingClientRect();
+                marioTouchX = e.touches[0].clientX - rect.left;
+            }, {passive: false});
+            canvas.addEventListener('touchend', () => { marioTouchX = null; });
+
+            playMusic();
+            marioAnimationId = requestAnimationFrame(marioGameLoop);
+        }
+
+        function stopMarioGame() {
+            marioGameActive = false;
+            if(marioAnimationId) { cancelAnimationFrame(marioAnimationId); marioAnimationId = null; }
+            if(musicInterval) { clearInterval(musicInterval); musicInterval = null; }
+        }
+
+        function marioGameLoop() {
+            if(!marioGameActive) return;
+            updateMario();
+            drawMario();
+            marioAnimationId = requestAnimationFrame(marioGameLoop);
+        }
+
+        function updateMario() {
+            const now = Date.now();
+            
+            if(marioKeys.left) marioPlayer.x -= marioPlayer.speed;
+            if(marioKeys.right) marioPlayer.x += marioPlayer.speed;
+            
+            if(marioTouchX !== null) {
+                const targetX = marioTouchX - marioPlayer.width / 2;
+                const diff = targetX - marioPlayer.x;
+                if(Math.abs(diff) > 5) {
+                    marioPlayer.x += Math.sign(diff) * marioPlayer.speed;
+                }
+            }
+
+            if(marioPlayer.x < 0) marioPlayer.x = 0;
+            if(marioPlayer.x > canvas.width - marioPlayer.width) marioPlayer.x = canvas.width - marioPlayer.width;
+
+            if(now - marioLastSpawn > marioSpawnRate) {
+                marioLastSpawn = now;
+                if(marioSpawnRate > 250) marioSpawnRate -= 15;
+                
+                const type = Math.random() < 0.6 ? 'food' : 'bomb';
+                let emoji = '';
+                if(type === 'food') {
+                    emoji = Math.random() < 0.5 ? '🍔' : '🍦';
+                } else {
+                    emoji = '❌';
+                }
+                
+                marioItems.push({
+                    x: Math.random() * (canvas.width - 40) + 20,
+                    y: -40,
+                    width: 40,
+                    height: 40,
+                    type: type,
+                    emoji: emoji,
+                    speed: 4 + Math.random() * 4 + (marioScore * 0.15)
+                });
+            }
+
+            for(let i = marioItems.length - 1; i >= 0; i--) {
+                const item = marioItems[i];
+                item.y += item.speed;
+
+                if(item.x < marioPlayer.x + marioPlayer.width &&
+                   item.x + item.width > marioPlayer.x &&
+                   item.y < marioPlayer.y + marioPlayer.height &&
+                   item.y + item.height > marioPlayer.y) {
+                    
+                    if(item.type === 'food') {
+                        marioScore++;
+                        document.getElementById('mario-score').innerText = marioScore;
+                        playEatSound();
+                        
+                        marioPlayer.width += 2;
+                        marioPlayer.height += 2;
+                        marioPlayer.y = canvas.height - marioPlayer.height - 10;
+                        
+                        if(marioScore > marioRecord) {
+                            marioRecord = marioScore;
+                            document.getElementById('mario-record').innerText = marioRecord;
+                            db.ref('mario_record').set(marioRecord);
+                        }
+                    } else {
+                        playDeathSound();
+                        stopMarioGame();
+                        if(marioScore > marioRecord) {
+                            marioRecord = marioScore;
+                            document.getElementById('mario-record').innerText = marioRecord;
+                            db.ref('mario_record').set(marioRecord);
+                        }
+                        // Mostrar overlay de derrota
+                        document.getElementById('mario-final-score').innerText = marioScore;
+                        document.getElementById('mario-final-record').innerText = marioRecord;
+                        document.getElementById('mario-overlay').classList.add('show');
+                        return;
+                    }
+                    marioItems.splice(i, 1);
+                    continue;
+                }
+
+                if(item.y > canvas.height) {
+                    marioItems.splice(i, 1);
+                }
+            }
+        }
+
+        function restartMarioGame() {
+            document.getElementById('mario-overlay').classList.remove('show');
+            initMarioGame();
+        }
+
+        function drawMario() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            for(let i = 0; i < 5; i++) {
+                ctx.beginPath();
+                ctx.arc(100 + i*150, 80 + i*20, 40, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.fillStyle = '#4CAF50';
+            ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
+            ctx.fillStyle = '#388E3C';
+            ctx.fillRect(0, canvas.height - 5, canvas.width, 5);
+
+            ctx.font = '40px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            marioItems.forEach(item => {
+                ctx.fillText(item.emoji, item.x + item.width/2, item.y + item.height/2);
+            });
+
+            ctx.fillStyle = 'rgba(0,0,0,0.2)';
+            ctx.beginPath();
+            ctx.ellipse(marioPlayer.x + marioPlayer.width/2, marioPlayer.y + marioPlayer.height + 5, marioPlayer.width/2, 5, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#ffb800';
+            ctx.shadowColor = 'rgba(0,0,0,0.5)';
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.roundRect(marioPlayer.x, marioPlayer.y, marioPlayer.width, marioPlayer.height, 15);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            const eyeOffsetX = marioPlayer.width * 0.3;
+            const eyeOffsetY = marioPlayer.height * 0.4;
+            const eyeRadius = marioPlayer.width * 0.1;
+
+            ctx.fillStyle = '#333';
+            ctx.beginPath();
+            ctx.arc(marioPlayer.x + eyeOffsetX, marioPlayer.y + eyeOffsetY, eyeRadius, 0, Math.PI * 2);
+            ctx.arc(marioPlayer.x + marioPlayer.width - eyeOffsetX, marioPlayer.y + eyeOffsetY, eyeRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(marioPlayer.x + eyeOffsetX + 2, marioPlayer.y + eyeOffsetY - 2, eyeRadius * 0.5, 0, Math.PI * 2);
+            ctx.arc(marioPlayer.x + marioPlayer.width - eyeOffsetX + 2, marioPlayer.y + eyeOffsetY - 2, eyeRadius * 0.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 3;
+            ctx.arc(marioPlayer.x + marioPlayer.width/2, marioPlayer.y + marioPlayer.height * 0.6, marioPlayer.width * 0.25, 0.1 * Math.PI, 0.9 * Math.PI);
+            ctx.stroke();
+        }
+
+        // Polyfill para roundRect
+        if(!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+                if (w < 2 * r) r = w / 2;
+                if (h < 2 * r) r = h / 2;
+                this.beginPath();
+                this.moveTo(x+r, y);
+                this.arcTo(x+w, y, x+w, y+h, r);
+                this.arcTo(x+w, y+h, x, y+h, r);
+                this.arcTo(x, y+h, x, y, r);
+                this.arcTo(x, y, x+w, y, r);
+                this.closePath();
+                return this;
+            };
         }
 
         // --- FUNCIONES DEL MENÚ Y PRODUCTOS (ORIGINALES) ---
